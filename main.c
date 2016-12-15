@@ -37,7 +37,7 @@ typedef struct _PositionList
 #pragma mark - Main
 
 void loadMenu();
-PositionArray *greedyCheapPAth(Board board, Position *src, Position *dst);
+PositionArray *greedyCheapPath(Board board, Position *src, Position *dst);
 
 int main()
 {
@@ -51,16 +51,76 @@ int main()
 
 #pragma mark - Helper Methods
 
-void printBoard(Board *board)
+int arrayRowNumber(char cRow)
+{
+    return (cRow - 'A');
+}
+
+int arrayColNumber(char cCol)
+{
+    return (cCol - '1');
+}
+
+void printBoard(Board board)
 {
     for (int row = 0; row < BOARD_SIZE; ++row)
     {
         for (int col = 0; col < BOARD_SIZE; ++col)
         {
-            printf("%4c", *board[row][col]);
+            printf("%4d", board[row][col]);
         }
         printf("\n");
     }
+}
+
+#pragma mark Allcations
+
+Position* allocatePositionObject(char row, char col)
+{
+    Position *ptr = (Position*)malloc(sizeof(Position));
+    if (!ptr)
+    {
+        printf("Could not allocate Position object");
+        exit(MALLOC_ERROR);
+    }
+    
+    *ptr[0] = row;
+    *ptr[1] = col;
+
+    return ptr;
+}
+
+PositionArray* allocatePositionArrayObject()
+{
+    PositionArray *ptr = (PositionArray*)malloc(sizeof(PositionArray));
+    if (!ptr)
+    {
+        printf("Could not allocate PositionArray object");
+        exit(MALLOC_ERROR);
+    }
+    
+    ptr->positions = NULL;
+    ptr->logical_size = ptr->pysical_size = 0;
+    return ptr;
+}
+
+void doublePositionsArraySize(Position **array, unsigned int *size)
+{
+    unsigned int newSize = (*size * 2) + 1;
+    *array = (Position*)realloc(*array, newSize * sizeof(Position*));
+    if (!array)
+    {
+        printf("Could not allocate Positions array");
+        exit(MALLOC_ERROR);
+    }
+    *size = newSize;
+}
+
+#pragma mark Comparisons
+
+int isPositionsEqual(Position *a, Position *b)
+{
+    return (a[0] == b[0] && a[1] == b[1]);
 }
 
 #pragma mark - Public Methods
@@ -81,7 +141,6 @@ void loadMenu()
     switch (option)
     {
         case 3:
-//            greedyCheapPAth(NULL, NULL, NULL);
             break;
             
         default:
@@ -89,7 +148,7 @@ void loadMenu()
     }
 }
 
-PositionArray *greedyCheapPAth(Board board, Position *src, Position *dst)
+PositionArray *greedyCheapPath(Board board, Position *src, Position *dst)
 {
     return NULL;
 }
