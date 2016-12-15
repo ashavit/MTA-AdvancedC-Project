@@ -127,6 +127,8 @@ int isPositionsEqual(Position *a, Position *b)
 
 void loadMenu()
 {
+    Board board = { { 97, 104, 56, 105 }, { 103, 57, 50, 122 }, { 121, 97, 65, 98 }, { 53, 115, 50, 52 } };
+    printBoard(board);
     int option;
     
     printf("1. Load a board from file\n");
@@ -141,7 +143,15 @@ void loadMenu()
     switch (option)
     {
         case 3:
+        {
+            Position* src = allocatePositionObject('B', '3');
+            Position* dst = allocatePositionObject('A', '3');
+            
+//            greedyCheapPath(board, src, src);
+            greedyCheapPath(board, src, dst);
+//            greedyCheapPath(board, src, dst);
             break;
+        }
             
         default:
             break;
@@ -150,5 +160,8 @@ void loadMenu()
 
 PositionArray *greedyCheapPath(Board board, Position *src, Position *dst)
 {
-    return NULL;
+    PositionArray *posArray = allocatePositionArrayObject();
+    
+    
+    return posArray;
 }
