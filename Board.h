@@ -25,14 +25,18 @@ typedef struct _PositionArray
     Position *positions;
 } PositionArray;
 
+
 Position* allocatePositionObject(char row, char col);
 PositionArray* allocatePositionArrayObject();
 void clearPositionArray(PositionArray *array);
 
+
 void printBoard(Board board);
 PositionArray *greedyCheapPath(Board board, Position *src, Position *dst);
 
+
 unsigned char getPriceOfCell(Board board, Position *pos);
 void setPriceOfCell(Board board, Position *pos, unsigned char price);
+
 
 #endif /* Board_h */

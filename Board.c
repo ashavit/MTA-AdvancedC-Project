@@ -7,6 +7,7 @@
 //
 
 #include <stdlib.h>
+#include <string.h>
 #include "Board.h"
 
 #pragma mark - Private Declarations
@@ -121,8 +122,6 @@ static char arrayColIndex(int col)
     return (col + '1');
 }
 
-#pragma mark Allcations
-
 static void doublePositionsArraySize(Position **array, unsigned int *size)
 {
     unsigned int newSize = (*size * 2) + 1;
@@ -234,8 +233,7 @@ static void addPositionToPositionArray(PositionArray* posArr, Position* pos)
     unsigned int p = posArr->logical_size;
     
     /// TODO: Amir: This is ugly ?!?
-    posArr->positions[p][0] = (*pos)[0];
-    posArr->positions[p][1] = (*pos)[1];
+    strcpy(posArr->positions[p], *pos);
     ++(posArr->logical_size);
 }
 
