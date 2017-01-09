@@ -43,6 +43,11 @@ Position* allocatePositionObject(char row, char col)
     return ptr;
 }
 
+void freePositionObject(Position *pos)
+{
+    free(pos);
+}
+
 PositionArray* allocatePositionArrayObject()
 {
     PositionArray *ptr = (PositionArray*)malloc(sizeof(PositionArray));

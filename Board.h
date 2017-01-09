@@ -27,8 +27,9 @@ typedef struct _PositionArray
 
 
 Position* allocatePositionObject(char row, char col);
-void freePositionArray(PositionArray *array);
+void freePositionObject(Position *pos);
 PositionArray* allocatePositionArrayObject();
+void freePositionArray(PositionArray *array);
 void clearPositionArray(PositionArray *array);
 void printPostionionsArray(PositionArray* posArr);
 
