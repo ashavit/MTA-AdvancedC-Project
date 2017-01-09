@@ -57,10 +57,15 @@ PositionArray* allocatePositionArrayObject()
     return ptr;
 }
 
+void freePositionArray(PositionArray *array)
+{
+    clearPositionArray(array);
+    free(array);
+}
+
 void clearPositionArray(PositionArray *array)
 {
-    /// TODO: Amir: This is not working
-    
+    free(array->positions);
     array->positions = NULL;
     array->logical_size = array->pysical_size = 0;
 }
@@ -72,6 +77,16 @@ PositionArray *greedyCheapPath(Board board, Position *src, Position *dst)
     recursiveGreedyCheapPath(board, src, dst, posArray);
     
     return posArray;
+}
+
+void printPostionionsArray(PositionArray* posArr)
+{
+    printf("The cheapest path is:\n");
+    for (int i = 0; i < posArr->logical_size; ++i)
+    {
+        printf("%d. %c%c\n", i+1, posArr->positions[i][0], posArr->positions[i][1]);
+    }
+    printf("\n");
 }
 
 void printBoard(Board board)
@@ -232,7 +247,6 @@ static void addPositionToPositionArray(PositionArray* posArr, Position* pos)
     
     unsigned int p = posArr->logical_size;
     
-    /// TODO: Amir: This is ugly ?!?
     strcpy(posArr->positions[p], *pos);
     ++(posArr->logical_size);
 }
@@ -260,15 +274,13 @@ static void recursiveGreedyCheapPath(Board board, Position *src, Position *dst, 
         addPositionToPositionArray(posArr, src);
         
         // Save source value as temp
-        /// TODO: Amir: This is copy right? so do we need to keep track?
         unsigned char keep = getPriceOfCell(board, src);
         setPriceOfCell(board, src, 0);
         
         // Recusive call with neighbor as src
         recursiveGreedyCheapPath(board, cheapestNeighbor, dst, posArr);
         
-        // restore source value
+        // restore original value from temp
         setPriceOfCell(board, src, keep);
     }
 }
-

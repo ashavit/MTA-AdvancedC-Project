@@ -51,21 +51,26 @@ void loadMenu()
     printf("5. Find all sorted path prices starting frmo source\n");
     printf("6. Find he cheapest path between source and destination\n");
     printf("7. Exit\n");
+    printf("Select option:\n");
     scanf("%d", &option);
     
     switch (option)
     {
         case 3:
         {
-            Position* src;
-            Position* dst;
+            Position* src1, *src2;
+            Position* dst1, *dst2;
             
-//            greedyCheapPath(board, src, src);
-            src = allocatePositionObject('A', '4');
-            dst = allocatePositionObject('D', '1');
-            PositionArray *posArray = greedyCheapPath(board, src, dst);
+            src1 = allocatePositionObject('A', '4');
+            dst1 = allocatePositionObject('D', '1');
+            PositionArray *posArray1 = greedyCheapPath(board, src1, dst1); /* Should return empty list */
+            freePositionArray(posArray1);
             
-//            greedyCheapPath(board, src, dst);
+            src2 = allocatePositionObject('A', '4');
+            dst2 = allocatePositionObject('C', '3');
+            PositionArray *posArray2 = greedyCheapPath(board, src2, dst2); /* Should return null */
+            printPostionionsArray(posArray2);
+            freePositionArray(posArray2);
             break;
         }
             
