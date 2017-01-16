@@ -35,8 +35,9 @@ pathTree allocateEmptyTree(void) {
 	return emptyTree;
 }
 
+//the function create new tree node
 static treeNode *createNewTNode(Position currPosition, treeNode *left, treeNode *right, treeNode *up, treeNode *down)
-{//the function create new tree node
+{
 	treeNode *res;
 	res = (treeNode*)malloc(sizeof(treeNode));
 	if (!res)

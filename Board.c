@@ -60,68 +60,35 @@ void setPriceOfCell(Board board, Position *pos, unsigned char price)
 //The function return true if position is legal and if the position price is not 0
 BOOL validatePosition(Board board, Position *pos, char *str)
 {
-    Position *curr;
+    Position *next;
     int curRow = arrayRowNumber((*pos)[0]);
     int curCol = arrayColNumber((*pos)[1]);
     
-    //check left side
+    int nextRow = curRow;
+    int nextCol = curCol;
+    
     if (strcmp(str, "left") == 0)
-    {
-        if ((curCol - 1) >= 0)
-        {
-            curr = allocatePositionObject(arrayRowIndex(curRow), arrayColIndex(curCol - 1));
-            if (getPriceOfCell(board, curr) != '0')
-                return TRUE;
-            else
-                return FALSE;
-        }
-        else
-            return FALSE;
-        
-    }
-    //checl right side
+        nextCol--;
     else if (strcmp(str, "right") == 0)
-    {
-        if (curCol + 1 < BOARD_SIZE)
-        {
-            curr = allocatePositionObject(arrayRowIndex(curRow), arrayColIndex(curCol + 1));
-            if (getPriceOfCell(board, curr) != '0')
-                return TRUE;
-            else
-                return FALSE;
-        }
-        else
-            return FALSE;
-    }
-    //check up side
+        nextCol++;
     else if (strcmp(str, "up") == 0)
-    {
-        if (curRow - 1 >= 0)
-        {
-            curr = allocatePositionObject(arrayRowIndex(curRow - 1), arrayColIndex(curCol));
-            if (getPriceOfCell(board, curr) != '0')
-                return TRUE;
-            else
-                return FALSE;
-        }
-        else
-            return FALSE;
-    }
-    //check down side
+        nextRow--;
     else if (strcmp(str, "down") == 0)
+        nextRow++;
+    
+    BOOL res = FALSE;
+    if (nextRow >= 0 && nextRow < BOARD_SIZE && nextCol >= 0 && nextCol < BOARD_SIZE)
     {
-        if (curRow + 1 < BOARD_SIZE)
-        {
-            curr = allocatePositionObject(arrayRowIndex(curRow + 1), arrayColIndex(curCol));
-            if (getPriceOfCell(board, curr) != '0')
-                return TRUE;
-            else
-                return FALSE;
-        }
+        
+        next = allocatePositionObject(arrayRowIndex(nextRow), arrayColIndex(nextCol));
+        if (getPriceOfCell(board, next) != '0')
+            res = TRUE;
         else
-            return FALSE;
+            res = FALSE;
+        
+        freePositionObject(next);
     }
-    return FALSE;
+    return res;
 }
 
 #pragma mark - Conversion
