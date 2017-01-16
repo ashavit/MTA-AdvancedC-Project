@@ -1,18 +1,14 @@
-//
-//  Board.h
-//  Advanced Programming - Project
-//
-//  Created by Amir Shavit on 25/12/2016.
-//  Copyright © 2016 Amir Shavit. All rights reserved.
-//
-
-#ifndef Board_h
-#define Board_h
+#ifndef  __BOARD_H__
+#define __BOARD_H__
 
 #include <stdio.h>
 
 #define MALLOC_ERROR -1
 #define BOARD_SIZE 4
+
+typedef int BOOL;
+#define FALSE 0
+#define TRUE 1
 
 #pragma mark - Data Model
 
@@ -33,12 +29,16 @@ void freePositionArray(PositionArray *array);
 void clearPositionArray(PositionArray *array);
 void printPostionionsArray(PositionArray* posArr);
 
+int arrayRowNumber(char cRow);
+int arrayColNumber(char cCol);
+char arrayRowIndex(int row);
+char arrayColIndex(int col);
+
 void printBoard(Board board);
 PositionArray *greedyCheapPath(Board board, Position *src, Position *dst);
 
-
 unsigned char getPriceOfCell(Board board, Position *pos);
 void setPriceOfCell(Board board, Position *pos, unsigned char price);
+BOOL validatePosition(Board board, Position *pos, char *str);
 
-
-#endif /* Board_h */
+#endif

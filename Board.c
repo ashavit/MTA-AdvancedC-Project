@@ -1,21 +1,10 @@
-//
-//  Board.c
-//  Advanced Programming - Project
-//
-//  Created by Amir Shavit on 25/12/2016.
-//  Copyright © 2016 Amir Shavit. All rights reserved.
-//
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdlib.h>
 #include <string.h>
 #include "Board.h"
 
 #pragma mark - Private Declarations
-
-static int arrayRowNumber(char cRow);
-static int arrayColNumber(char cCol);
-static char arrayRowIndex(int row);
-static char arrayColIndex(int col);
 
 static void recursiveGreedyCheapPath(Board board, Position *src, Position *dst, PositionArray* posArr);
 static void addPositionToPositionArray(PositionArray* posArr, Position* pos);
@@ -89,7 +78,7 @@ void printPostionionsArray(PositionArray* posArr)
     printf("The cheapest path is:\n");
     for (int i = 0; i < posArr->logical_size; ++i)
     {
-        printf("%d. %c%c\n", i+1, posArr->positions[i][0], posArr->positions[i][1]);
+        printf("%d. %c%c\n", i + 1, posArr->positions[i][0], posArr->positions[i][1]);
     }
     printf("\n");
 }
@@ -120,24 +109,91 @@ void setPriceOfCell(Board board, Position *pos, unsigned char price)
     board[row][col] = price;
 }
 
+//The function return true if position is legal and if the position price is not 0
+BOOL validatePosition(Board board, Position *pos, char *str)
+{
+    Position *curr;
+    int curRow = arrayRowNumber((*pos)[0]);
+    int curCol = arrayColNumber((*pos)[1]);
+    
+    //check left side
+    if (strcmp(str, "left") == 0)
+    {
+        if ((curCol - 1) >= 0)
+        {
+            curr = allocatePositionObject(arrayRowIndex(curRow), arrayColIndex(curCol - 1));
+            if (getPriceOfCell(board, curr) != '0')
+                return TRUE;
+            else
+                return FALSE;
+        }
+        else
+            return FALSE;
+        
+    }
+    //checl right side
+    else if (strcmp(str, "right") == 0)
+    {
+        if (curCol + 1 < BOARD_SIZE)
+        {
+            curr = allocatePositionObject(arrayRowIndex(curRow), arrayColIndex(curCol + 1));
+            if (getPriceOfCell(board, curr) != '0')
+                return TRUE;
+            else
+                return FALSE;
+        }
+        else
+            return FALSE;
+    }
+    //check up side
+    else if (strcmp(str, "up") == 0)
+    {
+        if (curRow - 1 >= 0)
+        {
+            curr = allocatePositionObject(arrayRowIndex(curRow - 1), arrayColIndex(curCol));
+            if (getPriceOfCell(board, curr) != '0')
+                return TRUE;
+            else
+                return FALSE;
+        }
+        else
+            return FALSE;
+    }
+    //check down side
+    else if (strcmp(str, "down") == 0)
+    {
+        if (curRow + 1 < BOARD_SIZE)
+        {
+            curr = allocatePositionObject(arrayRowIndex(curRow + 1), arrayColIndex(curCol));
+            if (getPriceOfCell(board, curr) != '0')
+                return TRUE;
+            else
+                return FALSE;
+        }
+        else
+            return FALSE;
+    }
+    return FALSE;
+}
+
 #pragma mark - Helper Methods
 
-static int arrayRowNumber(char cRow)
+int arrayRowNumber(char cRow)
 {
     return (cRow - 'A');
 }
 
-static char arrayRowIndex(int row)
+char arrayRowIndex(int row)
 {
     return (row + 'A');
 }
 
-static int arrayColNumber(char cCol)
+int arrayColNumber(char cCol)
 {
     return (cCol - '1');
 }
 
-static char arrayColIndex(int col)
+char arrayColIndex(int col)
 {
     return (col + '1');
 }
@@ -145,7 +201,7 @@ static char arrayColIndex(int col)
 static void doublePositionsArraySize(Position **array, unsigned int *size)
 {
     unsigned int newSize = (*size * 2) + 1;
-    *array = (Position*)realloc(*array, newSize * sizeof(Position*));
+    *array = (Position*)realloc(*array, newSize * sizeof(Position));
     if (!array)
     {
         printf("Could not allocate Positions array");
