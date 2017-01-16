@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
 #include "pathTree.h"
 
 static treeNode *createNewTNode(Position currPosition, treeNode *left, treeNode *right, treeNode *up, treeNode *down);
@@ -17,7 +19,7 @@ void printInOrder(pathTree tree)
 static void printInOrderAux(treeNode* root)
 {
     // Print Position
-    printf("%c%c ", root->Position[0], root->Position[1]);
+    printf("%c%c ", root->position[0], root->position[1]);
     
     if (root->left != NULL)
         printInOrderAux(root->left);
@@ -29,7 +31,7 @@ static void printInOrderAux(treeNode* root)
         printInOrderAux(root->down);
 }
 
-pathTree allocateEmptyTree(void) {
+static pathTree allocateEmptyTree(void) {
 	pathTree emptyTree;
 	emptyTree.root = NULL;
 	return emptyTree;
@@ -45,8 +47,8 @@ static treeNode *createNewTNode(Position currPosition, treeNode *left, treeNode 
 		printf("Could not allocate Position object");
 		exit(MALLOC_ERROR);
 	}	
-	res->Position[0] = currPosition[0];
-	res->Position[1] = currPosition[1];
+	res->position[0] = currPosition[0];
+	res->position[1] = currPosition[1];
 	res->left = left;
 	res->right = right;
 	res->up = up;

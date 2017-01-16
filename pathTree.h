@@ -1,10 +1,11 @@
 #ifndef  __PATH_H__
 #define __PATH_H__
-#include <stdlib.h>
+
 #include "Board.h"
+
 typedef struct  _treeNode
 {
-	Position Position;
+	Position position;
 	struct _treeNode *up, *down, *right, *left;
 } treeNode;
 
