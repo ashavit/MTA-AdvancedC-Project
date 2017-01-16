@@ -14,6 +14,7 @@ void printInOrder(pathTree tree)
 {
 	if (tree.root != NULL)
         printInOrderAux(tree.root);
+    printf("\n");
 }
 
 static void printInOrderAux(treeNode* root)
