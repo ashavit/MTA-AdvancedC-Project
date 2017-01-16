@@ -6,14 +6,8 @@
 
 #pragma mark - Private Declarations
 
-static void recursiveGreedyCheapPath(Board board, Position *src, Position *dst, PositionArray* posArr);
-static void addPositionToPositionArray(PositionArray* posArr, Position* pos);
-static void doublePositionsArraySize(Position **array, unsigned int *size);
-
-static int isPositionsEqual(Position *a, Position *b);
 /* Return cheaper cell if exist, or null if doesn't exist or if price is 0 */
 static Position* cheaperCellPosition(Board board, Position *a, Position *b);
-static Position* findCheapestCellNeighbor(Board board, Position *src);
 
 #pragma mark - Public Methods
 
@@ -35,52 +29,6 @@ Position* allocatePositionObject(char row, char col)
 void freePositionObject(Position *pos)
 {
     free(pos);
-}
-
-PositionArray* allocatePositionArrayObject()
-{
-    PositionArray *ptr = (PositionArray*)malloc(sizeof(PositionArray));
-    if (!ptr)
-    {
-        printf("Could not allocate PositionArray object");
-        exit(MALLOC_ERROR);
-    }
-    
-    ptr->positions = NULL;
-    ptr->logical_size = ptr->pysical_size = 0;
-    return ptr;
-}
-
-void freePositionArray(PositionArray *array)
-{
-    clearPositionArray(array);
-    free(array);
-}
-
-void clearPositionArray(PositionArray *array)
-{
-    free(array->positions);
-    array->positions = NULL;
-    array->logical_size = array->pysical_size = 0;
-}
-
-PositionArray *greedyCheapPath(Board board, Position *src, Position *dst)
-{
-    PositionArray *posArray = allocatePositionArrayObject();
-    
-    recursiveGreedyCheapPath(board, src, dst, posArray);
-    
-    return posArray;
-}
-
-void printPostionionsArray(PositionArray* posArr)
-{
-    printf("The cheapest path is:\n");
-    for (int i = 0; i < posArr->logical_size; ++i)
-    {
-        printf("%d. %c%c\n", i + 1, posArr->positions[i][0], posArr->positions[i][1]);
-    }
-    printf("\n");
 }
 
 void printBoard(Board board)
@@ -176,7 +124,7 @@ BOOL validatePosition(Board board, Position *pos, char *str)
     return FALSE;
 }
 
-#pragma mark - Helper Methods
+#pragma mark - Conversion
 
 int arrayRowNumber(char cRow)
 {
@@ -198,63 +146,14 @@ char arrayColIndex(int col)
     return (col + '1');
 }
 
-static void doublePositionsArraySize(Position **array, unsigned int *size)
-{
-    unsigned int newSize = (*size * 2) + 1;
-    *array = (Position*)realloc(*array, newSize * sizeof(Position));
-    if (!array)
-    {
-        printf("Could not allocate Positions array");
-        exit(MALLOC_ERROR);
-    }
-    *size = newSize;
-}
-
 #pragma mark Comparisons
 
-static int isPositionsEqual(Position *a, Position *b)
+BOOL isPositionsEqual(Position *a, Position *b)
 {
     return ((*a)[0] == (*b)[0] && (*a)[1] == (*b)[1]);
 }
 
-/* Return cheaper cell if exist, or null if doesn't exist or if price is 0 */
-static Position* cheaperCellPosition(Board board, Position *a, Position *b)
-{
-    if (!a && !b)
-        return NULL;
-    
-    unsigned char priceA = 0;
-    unsigned char priceB = 0;
-    
-    if (!a)
-    {
-        // Make sure b has valid price
-        priceB = getPriceOfCell(board, b);
-        return (priceB ? b : NULL);
-    }
-    
-    if (!b)
-    {
-        // Make sure a has valid price
-        priceA = getPriceOfCell(board, a);
-        return (priceA ? a : NULL);
-    }
-    
-    priceA = getPriceOfCell(board, a);
-    priceB = getPriceOfCell(board, b);
-    
-    // Compare price and validity
-    if (priceA && priceB) /* Compare 2 valid prices */
-        return (priceA < priceB ? a : b);
-    else if (priceA) /* Only a has valid price */
-        return a;
-    else if (priceB) /* Only b has valid price */
-        return b;
-    else /* Neither have valid price */
-        return NULL;
-}
-
-static Position* findCheapestCellNeighbor(Board board, Position *src)
+Position* findCheapestCellNeighbor(Board board, Position *src)
 {
     Position *cheapest = NULL;
     Position *curr = NULL;
@@ -297,51 +196,42 @@ static Position* findCheapestCellNeighbor(Board board, Position *src)
     return cheapest;
 }
 
-#pragma mark -
-static void addPositionToPositionArray(PositionArray* posArr, Position* pos)
+#pragma mark - Private
+
+/* Return cheaper cell if exist, or null if doesn't exist or if price is 0 */
+static Position* cheaperCellPosition(Board board, Position *a, Position *b)
 {
-    // Check if we have space
-    if (posArr->logical_size == posArr->pysical_size)
+    if (!a && !b)
+        return NULL;
+    
+    unsigned char priceA = 0;
+    unsigned char priceB = 0;
+    
+    if (!a)
     {
-        doublePositionsArraySize(&(posArr->positions), &(posArr->pysical_size));
+        // Make sure b has valid price
+        priceB = getPriceOfCell(board, b);
+        return (priceB ? b : NULL);
     }
     
-    unsigned int p = posArr->logical_size;
+    if (!b)
+    {
+        // Make sure a has valid price
+        priceA = getPriceOfCell(board, a);
+        return (priceA ? a : NULL);
+    }
     
-    strcpy(posArr->positions[p], *pos);
-    ++(posArr->logical_size);
+    priceA = getPriceOfCell(board, a);
+    priceB = getPriceOfCell(board, b);
+    
+    // Compare price and validity
+    if (priceA && priceB) /* Compare 2 valid prices */
+        return (priceA < priceB ? a : b);
+    else if (priceA) /* Only a has valid price */
+        return a;
+    else if (priceB) /* Only b has valid price */
+        return b;
+    else /* Neither have valid price */
+        return NULL;
 }
 
-static void recursiveGreedyCheapPath(Board board, Position *src, Position *dst, PositionArray* posArr)
-{
-    if (isPositionsEqual(src, dst))
-    {
-        addPositionToPositionArray(posArr, dst);
-        return;
-    }
-    
-    // Find cheapest neighbor cell
-    Position* cheapestNeighbor = findCheapestCellNeighbor(board, src);
-    
-    // If no next move - clear
-    if (!cheapestNeighbor)
-    {
-        clearPositionArray(posArr);
-        return;
-    }
-    else
-    {
-        // Add source to path
-        addPositionToPositionArray(posArr, src);
-        
-        // Save source value as temp
-        unsigned char keep = getPriceOfCell(board, src);
-        setPriceOfCell(board, src, 0);
-        
-        // Recusive call with neighbor as src
-        recursiveGreedyCheapPath(board, cheapestNeighbor, dst, posArr);
-        
-        // restore original value from temp
-        setPriceOfCell(board, src, keep);
-    }
-}

@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Commons.h"
 #include "Board.h"
+#include "PositionArray.h"
 #include "pathTree.h"
 
 typedef struct _PositionListCell
