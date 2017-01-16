@@ -8,23 +8,25 @@ static void printInOrderAux(treeNode* root);
 
 
 
-void printInOrder(pathTree tree) {
-	if (tree.root != NULL) printInOrderAux(tree.root);
+void printInOrder(pathTree tree)
+{
+	if (tree.root != NULL)
+        printInOrderAux(tree.root);
 }
 
-static void printInOrderAux(treeNode* root) {
-	if (root != NULL) {
-		if (root->Position != NULL)
-			printf("%c%c ", root->Position[0], root->Position[1]);
-		if (root->left != NULL)
-			printInOrderAux(root->left);
-		if (root->right != NULL)
-			printInOrderAux(root->right);
-		if (root->up != NULL)
-			printInOrderAux(root->right);
-		if (root->down != NULL)
-			printInOrderAux(root->right);
-	}
+static void printInOrderAux(treeNode* root)
+{
+    // Print Position
+    printf("%c%c ", root->Position[0], root->Position[1]);
+    
+    if (root->left != NULL)
+        printInOrderAux(root->left);
+    if (root->right != NULL)
+        printInOrderAux(root->right);
+    if (root->up != NULL)
+        printInOrderAux(root->up);
+    if (root->down != NULL)
+        printInOrderAux(root->down);
 }
 
 pathTree allocateEmptyTree(void) {
@@ -65,22 +67,18 @@ static treeNode * findAllPossiblePathsHelper(Board board, Position *startingPosi
 	res = createNewTNode(*startingPosition, NULL, NULL, NULL, NULL);
 	int curRow = arrayRowNumber((*startingPosition)[0]);
 	int curCol = arrayColNumber((*startingPosition)[1]);
-	res->Position[0] = (*startingPosition)[0];
-	res->Position[1] = (*startingPosition)[1];
 	
-		// Check if up is possible
-	if (validatePosition(board, startingPosition, "left") && validatePosition(board, startingPosition, "right")
-		&& validatePosition(board, startingPosition, "up") && validatePosition(board, startingPosition, "down"))
+    // Check if up is possible
+	if (!validatePosition(board, startingPosition, "left") && !validatePosition(board, startingPosition, "right")
+		&& !validatePosition(board, startingPosition, "up") && !validatePosition(board, startingPosition, "down"))
 	{
-		res->left = NULL;
-		res->right = NULL;
-		res->up = NULL;
-		res->down = NULL;
 		return res;
 	}
 	else
 	{
+        char tempPrice = getPriceOfCell(board, startingPosition);
 		setPriceOfCell(board, startingPosition, '0');
+        
 		if (validatePosition(board, startingPosition, "left"))
 		{
 			leftPos = allocatePositionObject(arrayRowIndex(curRow), arrayColIndex(curCol - 1));
@@ -101,6 +99,8 @@ static treeNode * findAllPossiblePathsHelper(Board board, Position *startingPosi
 			downPos = allocatePositionObject(arrayRowIndex(curRow + 1), arrayColIndex(curCol));
 			res->down = findAllPossiblePathsHelper(board, downPos);
 		}
+        
+        setPriceOfCell(board, startingPosition, tempPrice);
 		return res;
 	}
 
