@@ -1,11 +1,3 @@
-//
-//  PositionArray.c
-//  Advanced Programming - Project
-//
-//  Created by Amir Shavit on 16/01/2017.
-//  Copyright © 2017 Amir Shavit. All rights reserved.
-//
-
 #include <stdlib.h>
 #include <string.h>
 #include "PositionArray.h"
