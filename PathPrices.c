@@ -4,26 +4,28 @@
 #include "Board.h"
 #include "PathPrices.h"
 
-static int findAllPathsRec(Board board, treeNode *root, Position *dst, int *prices);
-static int* allocatePricesArray(size_t size);
-static void reallocatePricesArray(int **prices, size_t size);
+static int findAllPathsRec(Board board, treeNode *root, Position *dst, int **prices, unsigned int *size, unsigned int index);
+static int* allocatePricesArray(unsigned int size);
+static void reallocatePricesArray(int **prices, unsigned int size);
+static void doublePricesArray(int **prices, unsigned int *size);
 static void mergeSort(int *prices, int left, int right);
 
 int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **prices)
 {
-    *prices = allocatePricesArray(100);
+    unsigned int size = 1;
+    *prices = allocatePricesArray(size);
     
-    int size = 0;
+    int count = 0;
     if (tree->root)
-        size = findAllPathsRec(board, tree->root, dst, *prices);
+        count = findAllPathsRec(board, tree->root, dst, prices, &size, count);
 
     // Reduce memory size of array
-    reallocatePricesArray(prices, size);
+    reallocatePricesArray(prices, count);
     
     // Sort array
-    mergeSort(*prices, 0, size - 1);
+    mergeSort(*prices, 0, count - 1);
     
-    return size;
+    return count;
 }
 
 void freePricesArray(int *prices)
@@ -31,7 +33,7 @@ void freePricesArray(int *prices)
     free(prices);
 }
 
-static int* allocatePricesArray(size_t size)
+static int* allocatePricesArray(unsigned int size)
 {
     int *prices = (int*)malloc(sizeof(int) * size);
     if (!prices)
@@ -42,7 +44,7 @@ static int* allocatePricesArray(size_t size)
     return prices;
 }
 
-static void reallocatePricesArray(int **prices, size_t size)
+static void reallocatePricesArray(int **prices, unsigned int size)
 {
     *prices = (int*)realloc(*prices, sizeof(int) * size);
     if (!prices)
@@ -52,13 +54,23 @@ static void reallocatePricesArray(int **prices, size_t size)
     }
 }
 
+static void doublePricesArray(int **prices, unsigned int *size)
+{
+    int newSize = *size * 2;
+    reallocatePricesArray(prices, newSize);
+    *size = newSize;
+}
 
-static int findAllPathsRec(Board board, treeNode *root, Position *dst, int *prices)
+static int findAllPathsRec(Board board, treeNode *root, Position *dst, int **prices, unsigned int *size, unsigned int index)
 {
     // Base case - destination is found
     if (isPositionsEqual(&root->position, dst))
     {
-        prices[0] = getPriceOfCell(board, dst);
+        if (index == *size)
+        {
+            doublePricesArray(prices, size);
+        }
+        *(*prices+index) = getPriceOfCell(board, dst);
         return 1;
     }
     // Base case 2 - root is a leaf, destination not found
@@ -69,26 +81,28 @@ static int findAllPathsRec(Board board, treeNode *root, Position *dst, int *pric
     
     int dstCount = 0;
     
+    // Recursive calls to find paths by children
     if (root->left)
     {
-        dstCount += findAllPathsRec(board, root->left, dst, prices + dstCount);
+        dstCount += findAllPathsRec(board, root->left, dst, prices, size, index + dstCount);
     }
     if (root->right)
     {
-        dstCount += findAllPathsRec(board, root->right, dst, prices + dstCount);
+        dstCount += findAllPathsRec(board, root->right, dst, prices, size, index + dstCount);
     }
     if (root->up)
     {
-        dstCount += findAllPathsRec(board, root->up, dst, prices + dstCount);
+        dstCount += findAllPathsRec(board, root->up, dst, prices, size, index + dstCount);
     }
     if (root->down)
     {
-        dstCount += findAllPathsRec(board, root->down, dst, prices + dstCount);
+        dstCount += findAllPathsRec(board, root->down, dst, prices, size, index + dstCount);
     }
     
+    // Add current cell price to all children paths
     for (int i = 0; i < dstCount; ++i)
     {
-        prices[i] += getPriceOfCell(board, &root->position);
+        *(*prices + index + i) += getPriceOfCell(board, &root->position);
     }
     
     return dstCount;
