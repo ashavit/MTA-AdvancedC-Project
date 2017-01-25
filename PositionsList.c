@@ -5,12 +5,28 @@
 #include <string.h>
 #include "PositionList.h"
 
-int isEmptyList(PositionList * lst)
+static BOOL isEmptyList(PositionList * lst);
+static void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead);
+static PositionListCell * createNewListNode(Position position, PositionListCell *next);
+
+//The function print the list
+void printList(PositionList *lst)
+{
+    PositionListCell *curr = lst->head;
+    while (curr)
+    {
+        printf("%c%c ", curr->position[0], curr->position[1]);
+        curr = curr->next;
+    }
+    printf("\n");
+}
+
+static BOOL isEmptyList(PositionList * lst)
 {
 	if (lst->head == NULL)
-		return 1;
+		return TRUE;
 	else
-		return 0;
+		return FALSE;
 }
 
 //The funbction receive data and insert it to the end of lise
@@ -20,8 +36,9 @@ void insertDataToBeginingList(PositionList *lst, Position dataPtr)
 	newHead = createNewListNode(dataPtr, NULL);
 	insertNodeToBeginingListNode(lst, newHead);
 }
+
 //The function receive node and enter it to the list
-void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead)
+static void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead)
 {
 	int num;
 	num = isEmptyList(lst);
@@ -39,7 +56,7 @@ void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead)
 
 
 //The function create a new List Node
-PositionListCell * createNewListNode(Position position, PositionListCell *next)
+static PositionListCell * createNewListNode(Position position, PositionListCell *next)
 {
 	PositionListCell *res;
 	res = (PositionListCell*)malloc(sizeof(PositionListCell));
@@ -52,18 +69,6 @@ PositionListCell * createNewListNode(Position position, PositionListCell *next)
 	res->position[1] = position[1];
 	res->next = next;
 	return res;
-}
-//The function print the list
-void printList(PositionList * lst)
-{
-	PositionListCell *curr;
-	curr = lst->head;
-	while (curr != NULL)
-	{
-		printf("%c%c ", curr->position[0], curr->position[1]);
-		curr = curr->next;
-	}
-	printf("\n");
 }
 //The function receive list and empty it
 void makeEmptyList(PositionList *lst)

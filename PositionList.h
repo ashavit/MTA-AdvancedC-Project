@@ -15,10 +15,7 @@ typedef struct _positionList {
 } PositionList;
 
 
-int isEmptyList(PositionList * lst);
 void insertDataToBeginingList(PositionList *lst, Position dataPtr);
-void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead);
-PositionListCell * createNewListNode(Position position, PositionListCell *next);
 void printList(PositionList * lst);
 void makeEmptyList(PositionList *lst);
 
