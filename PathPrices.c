@@ -13,9 +13,7 @@ typedef struct _sumAndPosArray
 
 static int* allocatePricesArray(unsigned int size);
 static SumAndPosArray* allocatePricesAndNodesArray(unsigned int size);
-static void reallocatePricesArray(int **prices, unsigned int size);
 static void reallocatePricesAndNodesArray(SumAndPosArray **arr, unsigned int size);
-static void doublePricesArray(int **prices, unsigned int *size);
 static void doublePriceNodesArray(SumAndPosArray **arr, unsigned int *size);
 
 static int findAllPathsAndNodesRec(Board board, treeNode *root, Position *dst, SumAndPosArray **arr, unsigned int *size, unsigned int index);
@@ -38,11 +36,10 @@ int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **p
     // Sort array
     mergeSortPricesAndNode(arr, 0, count - 1);
     
-    *prices = allocatePricesArray(size);
+    // Final array size by count of price-node structs found
+    *prices = allocatePricesArray(count);
     for (int i = 0; i < count; i++)
-    {
         *(*prices + i) = arr[i].sum;
-    }
     return count;
 }
 
@@ -108,16 +105,6 @@ static SumAndPosArray* allocatePricesAndNodesArray(unsigned int size)
     return arr;
 }
 
-static void reallocatePricesArray(int **prices, unsigned int size)
-{
-    *prices = (int*)realloc(*prices, sizeof(int) * size);
-    if (!prices)
-    {
-        printf("Malloc Error");
-        exit(MALLOC_ERROR);
-    }
-}
-
 static void reallocatePricesAndNodesArray(SumAndPosArray **arr, unsigned int size)
 {
     *arr = (SumAndPosArray*)realloc(*arr, sizeof(SumAndPosArray) * size);
@@ -126,13 +113,6 @@ static void reallocatePricesAndNodesArray(SumAndPosArray **arr, unsigned int siz
         printf("Malloc Error");
         exit(MALLOC_ERROR);
     }
-}
-
-static void doublePricesArray(int **prices, unsigned int *size)
-{
-    unsigned int newSize = *size * 2;
-    reallocatePricesArray(prices, newSize);
-    *size = newSize;
 }
 
 static void doublePriceNodesArray(SumAndPosArray **arr, unsigned int *size)
