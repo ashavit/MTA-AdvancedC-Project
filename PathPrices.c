@@ -40,6 +40,10 @@ int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **p
     *prices = allocatePricesArray(count);
     for (int i = 0; i < count; i++)
         *(*prices + i) = arr[i].sum;
+    
+    // Free price-node array
+    free(arr);
+    
     return count;
 }
 
@@ -57,7 +61,12 @@ treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst)
     
     // Sort array
     mergeSortPricesAndNode(arr, 0, count - 1);
-    return (arr[0]).node;
+    treeNode *result = (arr[0]).node;
+    
+    // Free price-node array
+    free(arr);
+
+    return result;
 }
 
 
@@ -76,11 +85,6 @@ PositionList *findTheCheapestPath(Board board, pathTree *tree, Position *dst)
     makeEmptyList(cheapestPathList);
     pathFound = findTheCheapestPathRec(cheapestNode, tree->root, &cheapestPathList, dst);
     return cheapestPathList;
-}
-
-void freePricesArray(int *prices)
-{
-    free(prices);
 }
 
 static int* allocatePricesArray(unsigned int size)

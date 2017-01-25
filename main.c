@@ -54,6 +54,7 @@ void testFindSortedPrices(Board board, pathTree *tree, Position *dst)
         printf("%d  ", prices[i]);
     }
     printf("\n\n");
+    free(prices);
 }
 
 void testPathTree(Board board)
