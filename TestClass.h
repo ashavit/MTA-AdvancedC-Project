@@ -3,12 +3,12 @@
 
 #include <stdio.h>
 
-#include "PositionList.h"
 #include "Commons.h"
 #include "Board.h"
 #include "PositionArray.h"
 #include "PathTree.h"
 #include "PathPrices.h"
+#include "PositionList.h"
 
 void runTests();
 

@@ -1,26 +1,32 @@
-All: main.o Board.o Interface.o PathPrices.o pathTree.o PositionArray.o
+All: main.o Board.o Interface.o PathPrices.o PathTree.o PositionArray.o PositionList.o TestClass.o
 	clear
-	gcc main.o Board.o Interface.o PathPrices.o pathTree.o PositionArray.o -o main
+	gcc main.o Board.o Interface.o PathPrices.o PathTree.o PositionArray.o PositionList.o TestClass.o -o main
 	./main
 	make clear
 
-main.o: main.c Commons.h Board.h PositionArray.h pathTree.h PathPrices.h
+main.o: main.c Interface.h TestClass.h
 	gcc -c main.c
 
-Board.o: Board.c Commons.h Board.h
+Board.o: Board.c Board.h Commons.h
 	gcc -c Board.c
 
-Interface.o: Commons.h Interface.c Interface.h Board.h
+Interface.o: Interface.c Interface.h Commons.h Board.h
 	gcc -c Interface.c
 
-PositionArray.o: Commons.h PositionArray.c PositionArray.h Board.h
+PositionArray.o: PositionArray.c PositionArray.h Commons.h Board.h
 	gcc -c PositionArray.c
 
-pathTree.o: Commons.h pathTree.c pathTree.h Board.h
-	gcc -c pathTree.c
+PathTree.o: PathTree.c PathTree.h Commons.h Board.h
+	gcc -c PathTree.c
 
-PathPrices.o: Commons.h PathPrices.c PathPrices.h Board.h pathTree.h
+PathPrices.o: PathPrices.c PathPrices.h Commons.h Board.h PathTree.h
 	gcc -c PathPrices.c
+
+PositionList.o: PositionList.c PositionList.h Commons.h Board.h
+	gcc -c PositionList.c
+
+TestClass.o: TestClass.c TestClass.h Commons.h Board.h PositionArray.h PathTree.h PathPrices.h PositionList.h
+	gcc -c TestClass.c
 
 clear:
 	rm *.o
