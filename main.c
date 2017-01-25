@@ -3,22 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "PositionList.h"
 #include "Commons.h"
 #include "Board.h"
 #include "PositionArray.h"
 #include "pathTree.h"
 #include "PathPrices.h"
-
-typedef struct _PositionListCell
-{
-    Position position;
-    struct _PositionListCell *next;
-} PositionListCell;
-
-typedef struct _PositionList
-{
-    PositionListCell *head, *tail;
-} PositionList;
 
 void test();
 
@@ -102,15 +92,89 @@ void testSortedPathPricesPath3x3()
     testFindSortedPrices(board3x3, &tree3x3, dst3x3);
 }
 
+
+void testFindTheCheapestPathEndNode2x2()
+{
+    Board board2x2 = { { 97, 104 },{ 103, 57 } };
+    printBoard(board2x2);
+    Position* src2x2 = allocatePositionObject('B', '2');
+    Position *dst2x2 = allocatePositionObject('B', '1');
+    pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
+    treeNode *cheapestNode;
+    //printInOrder(currTree);
+    cheapestNode = findTheCheapestPathEndNode(board2x2, tree2x2.root, dst2x2);
+    printf("%c%c\n", cheapestNode->position[0], cheapestNode->position[1]);
+    printf("%d\n", &cheapestNode);
+}
+
+
+void testFindTheCheapestPathEndNode3x3()
+{
+    Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
+    printBoard(board3x3);
+    pathTree currTree;
+    treeNode *cheapestNode;
+    Position* src3x3 = allocatePositionObject('A', '1');
+    Position *dst3x3 = allocatePositionObject('C', '3');
+    currTree = findAllPossiblePaths(board3x3, src3x3);
+    //printInOrder(currTree);
+    cheapestNode = findTheCheapestPathEndNode(board3x3, currTree.root, dst3x3);
+    printf("%c%c\n", cheapestNode->position[0], cheapestNode->position[1]);
+    printf("%d\n", &cheapestNode);
+    
+}
+
+void testFindTheCheapestPathList2x2()
+{
+    Board board2x2 = { { 97, 104 },{ 103, 57 } };
+    printBoard(board2x2);
+    Position* src2x2 = allocatePositionObject('B', '2');
+    Position *dst2x2 = allocatePositionObject('B', '1');
+    pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
+    PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
+    if (!pathList)
+    {
+        printf("Could not allocate PositionArray object");
+        exit(MALLOC_ERROR);
+    }
+    
+    makeEmptyList(pathList);
+    //printInOrder(currTree);
+    pathList = findTheCheapestPath(board2x2, &tree2x2, dst2x2);
+    printList(pathList);
+}
+
+void testFindTheCheapestPathList3x3()
+{
+    Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
+    printBoard(board3x3);
+    Position* src3x3 = allocatePositionObject('A', '1');
+    Position *dst3x3 = allocatePositionObject('C', '3');
+    pathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
+    PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
+    if (!pathList)
+    {
+        printf("Could not allocate PositionArray object");
+        exit(MALLOC_ERROR);
+    }
+    
+    makeEmptyList(pathList);	//printInOrder(currTree);
+    pathList = findTheCheapestPath(board3x3, &tree3x3, dst3x3);
+    printList(pathList);
+}
+
 void test()
 {
     testSortedPathPricesPath2x2();
     testSortedPathPricesPath3x3();
-
-    Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
-    printBoard(board);
     
-    testCheap(board);
-    testPathTree(board);
+//    Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
+//    printBoard(board);
+    
+    //testCheap(board);
+    //testPathTree(board);
+    testFindTheCheapestPathEndNode2x2();
+    testFindTheCheapestPathList2x2();
+    testFindTheCheapestPathEndNode3x3();
+    testFindTheCheapestPathList3x3();
 }
-

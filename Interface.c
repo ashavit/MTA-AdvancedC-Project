@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Interface.h"
 #include "Board.h"
 
@@ -23,8 +25,7 @@ void loadMenu()
     {
         scanf("%d", &option);
         performAction(option, board);
-    }
-    while (option != EXIT_CODE);
+    } while (option != EXIT_CODE);
 }
 
 static void performAction(int option, Board board)
@@ -61,4 +62,3 @@ static void performAction(int option, Board board)
             break;
     }
 }
-

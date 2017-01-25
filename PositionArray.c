@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdlib.h>
 #include <string.h>
 #include "PositionArray.h"
@@ -32,8 +34,12 @@ void freePositionArray(PositionArray *array)
 
 void clearPositionArray(PositionArray *array)
 {
-    free(array->positions);
-    array->positions = NULL;
+    if (array->positions)
+    {
+        free(array->positions);
+        array->positions = NULL;
+    }
+    
     array->logical_size = array->pysical_size = 0;
 }
 
@@ -117,4 +123,3 @@ static void recursiveGreedyCheapPath(Board board, Position *src, Position *dst, 
         setPriceOfCell(board, src, keep);
     }
 }
-

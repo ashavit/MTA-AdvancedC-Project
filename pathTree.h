@@ -5,12 +5,12 @@
 
 typedef struct  _treeNode
 {
-	Position position;
-	struct _treeNode *up, *down, *right, *left;
+    Position position;
+    struct _treeNode *up, *down, *right, *left;
 } treeNode;
 
 typedef struct _pathTree {
-	treeNode *root;
+    treeNode *root;
 } pathTree;
 
 pathTree findAllPossiblePaths(Board board, Position *startingPosition);
