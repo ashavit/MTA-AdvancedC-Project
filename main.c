@@ -104,8 +104,7 @@ void testFindTheCheapestPathEndNode2x2()
     treeNode *cheapestNode;
     //printInOrder(currTree);
     cheapestNode = findTheCheapestPathEndNode(board2x2, tree2x2.root, dst2x2);
-    printf("%c%c\n", cheapestNode->position[0], cheapestNode->position[1]);
-    printf("%d\n", &cheapestNode);
+    printf("cheapestNode: %p for dst: %c%c\n", cheapestNode, cheapestNode->position[0], cheapestNode->position[1]);
 }
 
 
@@ -120,9 +119,7 @@ void testFindTheCheapestPathEndNode3x3()
     currTree = findAllPossiblePaths(board3x3, src3x3);
     //printInOrder(currTree);
     cheapestNode = findTheCheapestPathEndNode(board3x3, currTree.root, dst3x3);
-    printf("%c%c\n", cheapestNode->position[0], cheapestNode->position[1]);
-    printf("%d\n", &cheapestNode);
-    
+    printf("cheapestNode: %p for dst: %c%c\n", cheapestNode, cheapestNode->position[0], cheapestNode->position[1]);
 }
 
 void testFindTheCheapestPathList2x2()
@@ -147,7 +144,8 @@ void testFindTheCheapestPathList2x2()
 
 void testFindTheCheapestPathList3x3()
 {
-    Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
+    Board board3x3 = { { 97, 122, 56 },{ 103, 57, 50 },{ 121, 97, 65 }};
+//    Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
     printBoard(board3x3);
     Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
