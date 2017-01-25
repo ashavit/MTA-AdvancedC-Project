@@ -73,7 +73,7 @@ void testSortedPathPricesPath2x2()
     Board board2x2 = { { 97, 104 },{ 103, 57 } };
     printBoard(board2x2);
     
-    Position* src2x2 = allocatePositionObject('B', '2');
+    Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
     pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
 
@@ -83,9 +83,10 @@ void testSortedPathPricesPath2x2()
 void testSortedPathPricesPath3x3()
 {
     Board board3x3 = { { 97, 104, 56 },{ 103, 57, 50 },{ 121, 97, 65 }};
+//    Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
     printBoard(board3x3);
     
-    Position* src3x3 = allocatePositionObject('A', '1');
+    Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
     pathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
 
@@ -97,7 +98,7 @@ void testFindTheCheapestPathEndNode2x2()
 {
     Board board2x2 = { { 97, 104 },{ 103, 57 } };
     printBoard(board2x2);
-    Position* src2x2 = allocatePositionObject('B', '2');
+    Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
     pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
     treeNode *cheapestNode;
@@ -114,7 +115,7 @@ void testFindTheCheapestPathEndNode3x3()
     printBoard(board3x3);
     pathTree currTree;
     treeNode *cheapestNode;
-    Position* src3x3 = allocatePositionObject('A', '1');
+    Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
     currTree = findAllPossiblePaths(board3x3, src3x3);
     //printInOrder(currTree);
@@ -128,7 +129,7 @@ void testFindTheCheapestPathList2x2()
 {
     Board board2x2 = { { 97, 104 },{ 103, 57 } };
     printBoard(board2x2);
-    Position* src2x2 = allocatePositionObject('B', '2');
+    Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
     pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
     PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
@@ -148,7 +149,7 @@ void testFindTheCheapestPathList3x3()
 {
     Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
     printBoard(board3x3);
-    Position* src3x3 = allocatePositionObject('A', '1');
+    Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
     pathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
     PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
@@ -158,7 +159,8 @@ void testFindTheCheapestPathList3x3()
         exit(MALLOC_ERROR);
     }
     
-    makeEmptyList(pathList);	//printInOrder(currTree);
+    makeEmptyList(pathList);
+    //printInOrder(currTree);
     pathList = findTheCheapestPath(board3x3, &tree3x3, dst3x3);
     printList(pathList);
 }
