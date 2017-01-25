@@ -18,7 +18,7 @@ static void doublePriceNodesArray(SumAndPosArray **arr, unsigned int *size);
 
 static int findAllPathsAndNodesRec(Board board, treeNode *root, Position *dst, SumAndPosArray **arr, unsigned int *size, unsigned int index);
 static void mergeSortPricesAndNode(SumAndPosArray *arr, int left, int right);
-static BOOL findTheCheapestPathRec(treeNode *cheapestNode, treeNode *root, PositionList **cheapestPathList, Position *dst);
+static BOOL findTheCheapestPathRec(PositionList **cheapestPathList, treeNode *root, treeNode *dstNode);
 
 
 int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **prices)
@@ -69,14 +69,16 @@ treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst)
     return result;
 }
 
-
 PositionList *findTheCheapestPath(Board board, pathTree *tree, Position *dst)
 {
-    treeNode *cheapestNode = findTheCheapestPathEndNode(board, tree->root, dst);
+    if (!tree || !tree->root || !dst)
+        return NULL;
+    
+    treeNode *dstNode = findTheCheapestPathEndNode(board, tree->root, dst);
     PositionList *cheapestPathList = allocatePositionList();
     
     BOOL pathFound = FALSE;
-    pathFound = findTheCheapestPathRec(cheapestNode, tree->root, &cheapestPathList, dst);
+    pathFound = findTheCheapestPathRec(&cheapestPathList, tree->root, dstNode);
     return cheapestPathList;
 }
 
@@ -197,12 +199,12 @@ static void mergeSortPricesAndNode(SumAndPosArray *arr, int left, int right)
     mergePricesAndNodes(arr, left, mid, right);
 }
 
-static BOOL findTheCheapestPathRec(treeNode *cheapestNode, treeNode *root, PositionList **cheapestPathList, Position *dst)
+static BOOL findTheCheapestPathRec(PositionList **cheapestPathList, treeNode *root, treeNode *dstNode)
 {
     //PositionListCell *newNode;
     BOOL nodeWasFoundUp = FALSE, nodeWasFoundDown = FALSE, nodeWasFoundRight = FALSE, nodeWasFoundLeft = FALSE;
     
-    if (root == cheapestNode)
+    if (root == dstNode)
     {
         insertDataToBeginingList(*cheapestPathList, root->position);
         return TRUE;
@@ -213,13 +215,14 @@ static BOOL findTheCheapestPathRec(treeNode *cheapestNode, treeNode *root, Posit
     }
     else {
         if (root->down)
-            nodeWasFoundDown = findTheCheapestPathRec(cheapestNode, root->down, cheapestPathList, dst);
+            nodeWasFoundDown = findTheCheapestPathRec(cheapestPathList, root->down, dstNode);
         if (root->up)
-            nodeWasFoundUp = findTheCheapestPathRec(cheapestNode, root->up, cheapestPathList, dst);
+            nodeWasFoundUp = findTheCheapestPathRec(cheapestPathList, root->up, dstNode);
         if (root->right)
-            nodeWasFoundRight = findTheCheapestPathRec(cheapestNode, root->right, cheapestPathList, dst);
+            nodeWasFoundRight = findTheCheapestPathRec(cheapestPathList, root->right, dstNode);
         if (root->left)
-            nodeWasFoundLeft = findTheCheapestPathRec(cheapestNode, root->left, cheapestPathList, dst);
+            nodeWasFoundLeft = findTheCheapestPathRec(cheapestPathList, root->left, dstNode);
+        
         if (nodeWasFoundDown || nodeWasFoundLeft || nodeWasFoundRight || nodeWasFoundUp) {
             insertDataToBeginingList(*cheapestPathList, root->position);
             return TRUE;
