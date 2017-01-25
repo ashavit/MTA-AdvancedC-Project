@@ -7,7 +7,7 @@
 
 static BOOL isEmptyList(PositionList * lst);
 static void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead);
-static PositionListCell * createNewListNode(Position position, PositionListCell *next);
+static PositionListCell* createNewListNode(Position position);
 
 PositionList* allocatePositionList()
 {
@@ -38,7 +38,6 @@ void freePositionList(PositionList *lst)
     free(lst);
 }
 
-//The function print the list
 void printList(PositionList *lst)
 {
     PositionListCell *curr = lst->head;
@@ -50,6 +49,13 @@ void printList(PositionList *lst)
     printf("\n");
 }
 
+//The function receive position data and inserts it to the begining of list
+void insertDataToBeginingList(PositionList *lst, Position pos)
+{
+    PositionListCell *newHead = createNewListNode(pos);
+    insertNodeToBeginingListNode(lst, newHead);
+}
+
 static BOOL isEmptyList(PositionList * lst)
 {
 	if (lst->head == NULL)
@@ -58,20 +64,10 @@ static BOOL isEmptyList(PositionList * lst)
 		return FALSE;
 }
 
-//The funbction receive data and insert it to the end of lise
-void insertDataToBeginingList(PositionList *lst, Position dataPtr)
-{
-	PositionListCell *newHead;
-	newHead = createNewListNode(dataPtr, NULL);
-	insertNodeToBeginingListNode(lst, newHead);
-}
-
 //The function receive node and enter it to the list
 static void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead)
 {
-	int num;
-	num = isEmptyList(lst);
-	if (num == 1)
+	if (isEmptyList(lst))
 	{
 		lst->head = lst->tail = newHead;
 	}
@@ -80,12 +76,10 @@ static void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *ne
 		newHead->next = lst->head;
 		lst->head = newHead;
 	}
-
 }
 
-
 //The function create a new List Node
-static PositionListCell * createNewListNode(Position position, PositionListCell *next)
+static PositionListCell* createNewListNode(Position position)
 {
 	PositionListCell *res;
 	res = (PositionListCell*)malloc(sizeof(PositionListCell));
@@ -96,7 +90,7 @@ static PositionListCell * createNewListNode(Position position, PositionListCell 
 	}
 	res->position[0] = position[0];
 	res->position[1] = position[1];
-	res->next = next;
+	res->next = NULL;
 	return res;
 }
 

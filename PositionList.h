@@ -18,7 +18,9 @@ typedef struct _positionList {
 PositionList* allocatePositionList();
 void freePositionList(PositionList *list);
 
-void insertDataToBeginingList(PositionList *lst, Position dataPtr);
+/* The function receive position data and inserts it to the begining of list */
+void insertDataToBeginingList(PositionList *lst, Position pos);
+
 void printList(PositionList * lst);
 
 #endif
