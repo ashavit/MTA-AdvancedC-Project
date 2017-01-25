@@ -7,7 +7,7 @@
 #include "Commons.h"
 #include "Board.h"
 #include "PositionArray.h"
-#include "pathTree.h"
+#include "PathTree.h"
 #include "PathPrices.h"
 
 void runTests();

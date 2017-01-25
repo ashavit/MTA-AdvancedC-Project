@@ -5,7 +5,7 @@
 
 static void testCheap(Board board);
 static void testPathTree(Board board);
-static void testFindSortedPrices(Board board, pathTree *tree, Position *dst);
+static void testFindSortedPrices(Board board, PathTree *tree, Position *dst);
 static void testSortedPathPricesPath2x2();
 static void testSortedPathPricesPath3x3();
 static void testFindTheCheapestPathEndNode2x2();
@@ -64,7 +64,7 @@ static void testCheap(Board board)
 static void testPathTree(Board board)
 {
     Position* src1;
-    pathTree tree1;
+    PathTree tree1;
     src1 = allocatePositionObject('A', '4');
     Position* dst1 = allocatePositionObject('B', '4');
     tree1 = findAllPossiblePaths(board, src1);
@@ -73,7 +73,7 @@ static void testPathTree(Board board)
     testFindSortedPrices(board, &tree1, dst1);
 }
 
-static void testFindSortedPrices(Board board, pathTree *tree, Position *dst)
+static void testFindSortedPrices(Board board, PathTree *tree, Position *dst)
 {
     int *prices;
     int count = findAllPathsSortedPrices(board, tree, dst, &prices);
@@ -95,7 +95,7 @@ static void testSortedPathPricesPath2x2()
     
     Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
-    pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
+    PathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
     
     testFindSortedPrices(board2x2, &tree2x2, dst2x2);
 }
@@ -108,7 +108,7 @@ static void testSortedPathPricesPath3x3()
     
     Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
-    pathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
+    PathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
     
     testFindSortedPrices(board3x3, &tree3x3, dst3x3);
 }
@@ -120,8 +120,8 @@ static void testFindTheCheapestPathEndNode2x2()
     printBoard(board2x2);
     Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
-    pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
-    treeNode *cheapestNode;
+    PathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
+    TreeNode *cheapestNode;
     //printInOrder(currTree);
     cheapestNode = findTheCheapestPathEndNode(board2x2, tree2x2.root, dst2x2);
     printf("cheapestNode: %p for dst: %c%c\n", cheapestNode, cheapestNode->position[0], cheapestNode->position[1]);
@@ -131,8 +131,8 @@ static void testFindTheCheapestPathEndNode3x3()
 {
     Board board3x3 = { { 1,2, 3 },{ 4, 5,6 },{ 7, 8, 9 } };
     printBoard(board3x3);
-    pathTree currTree;
-    treeNode *cheapestNode;
+    PathTree currTree;
+    TreeNode *cheapestNode;
     Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
     currTree = findAllPossiblePaths(board3x3, src3x3);
@@ -148,7 +148,7 @@ static void testFindTheCheapestPathList2x2()
     printBoard(board2x2);
     Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
-    pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
+    PathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
     PositionList *pathList = findTheCheapestPath(board2x2, &tree2x2, dst2x2);
     printList(pathList);
     freePositionList(pathList);
@@ -161,7 +161,7 @@ static void testFindTheCheapestPathList3x3()
     printBoard(board3x3);
     Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
-    pathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
+    PathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
     PositionList *pathList = findTheCheapestPath(board3x3, &tree3x3, dst3x3);
     printList(pathList);
     freePositionList(pathList);

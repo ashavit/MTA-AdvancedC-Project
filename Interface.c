@@ -52,7 +52,7 @@ static void performAction(int option, Board board)
         case 4:
         {
 //            Position* src1;
-//            pathTree tree1;
+//            PathTree tree1;
 //            src1 = allocatePositionObject('A', '4');
 //            tree1 = findAllPossiblePaths(board, src1);
 //            printInOrder(tree1);

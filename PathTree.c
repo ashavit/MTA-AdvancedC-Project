@@ -1,21 +1,21 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdlib.h>
-#include "pathTree.h"
+#include "PathTree.h"
 
-static treeNode *createNewTNode(Position currPosition, treeNode *left, treeNode *right, treeNode *up, treeNode *down);
-static pathTree allocateEmptyTree(void);
-static treeNode * findAllPossiblePathsHelper(Board board, Position *startingPosition);
-static void printInOrderAux(treeNode* root);
+static TreeNode *createNewTNode(Position currPosition, TreeNode *left, TreeNode *right, TreeNode *up, TreeNode *down);
+static PathTree allocateEmptyTree(void);
+static TreeNode * findAllPossiblePathsHelper(Board board, Position *startingPosition);
+static void printInOrderAux(TreeNode* root);
 
-void printInOrder(pathTree tree)
+void printInOrder(PathTree tree)
 {
     if (tree.root != NULL)
         printInOrderAux(tree.root);
     printf("\n");
 }
 
-static void printInOrderAux(treeNode* root)
+static void printInOrderAux(TreeNode* root)
 {
     // Print Position
     printf("%c%c ", root->position[0], root->position[1]);
@@ -30,17 +30,17 @@ static void printInOrderAux(treeNode* root)
         printInOrderAux(root->down);
 }
 
-static pathTree allocateEmptyTree(void) {
-    pathTree emptyTree;
+static PathTree allocateEmptyTree(void) {
+    PathTree emptyTree;
     emptyTree.root = NULL;
     return emptyTree;
 }
 
 //the function create new tree node
-static treeNode *createNewTNode(Position currPosition, treeNode *left, treeNode *right, treeNode *up, treeNode *down)
+static TreeNode *createNewTNode(Position currPosition, TreeNode *left, TreeNode *right, TreeNode *up, TreeNode *down)
 {
-    treeNode *res;
-    res = (treeNode*)malloc(sizeof(treeNode));
+    TreeNode *res;
+    res = (TreeNode*)malloc(sizeof(TreeNode));
     if (!res)
     {
         printf("Could not allocate Position object");
@@ -55,16 +55,16 @@ static treeNode *createNewTNode(Position currPosition, treeNode *left, treeNode 
     return res;
 }
 
-pathTree findAllPossiblePaths(Board board, Position *startingPosition)
+PathTree findAllPossiblePaths(Board board, Position *startingPosition)
 {
-    pathTree possiblePathsTree = allocateEmptyTree();
+    PathTree possiblePathsTree = allocateEmptyTree();
     possiblePathsTree.root = findAllPossiblePathsHelper(board, startingPosition);
     return possiblePathsTree;
 }
 
-static treeNode * findAllPossiblePathsHelper(Board board, Position *startingPosition)
+static TreeNode * findAllPossiblePathsHelper(Board board, Position *startingPosition)
 {
-    treeNode *res;
+    TreeNode *res;
     Position *leftPos, *rightPos, *upPos, *downPos;
     res = createNewTNode(*startingPosition, NULL, NULL, NULL, NULL);
     int curRow = arrayRowNumber((*startingPosition)[0]);

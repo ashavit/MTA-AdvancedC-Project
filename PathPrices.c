@@ -7,7 +7,7 @@
 typedef struct _sumAndPosArray
 {
     unsigned int sum;
-    treeNode *node;
+    TreeNode *node;
 } SumAndPosArray;
 
 
@@ -16,12 +16,12 @@ static SumAndPosArray* allocatePricesAndNodesArray(unsigned int size);
 static void reallocatePricesAndNodesArray(SumAndPosArray **arr, unsigned int size);
 static void doublePriceNodesArray(SumAndPosArray **arr, unsigned int *size);
 
-static int findAllPathsAndNodesRec(Board board, treeNode *root, Position *dst, SumAndPosArray **arr, unsigned int *size, unsigned int index);
+static int findAllPathsAndNodesRec(Board board, TreeNode *root, Position *dst, SumAndPosArray **arr, unsigned int *size, unsigned int index);
 static void mergeSortPricesAndNode(SumAndPosArray *arr, int left, int right);
-static BOOL findTheCheapestPathRec(PositionList **cheapestPathList, treeNode *root, treeNode *dstNode);
+static BOOL findTheCheapestPathRec(PositionList **cheapestPathList, TreeNode *root, TreeNode *dstNode);
 
 
-int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **prices)
+int findAllPathsSortedPrices(Board board, PathTree *tree, Position *dst, int **prices)
 {
     unsigned int size = 1;
     SumAndPosArray *arr = allocatePricesAndNodesArray(size);
@@ -47,7 +47,7 @@ int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **p
     return count;
 }
 
-treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst)
+TreeNode *findTheCheapestPathEndNode(Board board, TreeNode *node, Position *dst)
 {
     unsigned int size = 1;
     SumAndPosArray *arr = allocatePricesAndNodesArray(size);
@@ -61,7 +61,7 @@ treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst)
     
     // Sort array
     mergeSortPricesAndNode(arr, 0, count - 1);
-    treeNode *result = (arr[0]).node;
+    TreeNode *result = (arr[0]).node;
     
     // Free price-node array
     free(arr);
@@ -69,12 +69,12 @@ treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst)
     return result;
 }
 
-PositionList *findTheCheapestPath(Board board, pathTree *tree, Position *dst)
+PositionList *findTheCheapestPath(Board board, PathTree *tree, Position *dst)
 {
     if (!tree || !tree->root || !dst)
         return NULL;
     
-    treeNode *dstNode = findTheCheapestPathEndNode(board, tree->root, dst);
+    TreeNode *dstNode = findTheCheapestPathEndNode(board, tree->root, dst);
     PositionList *cheapestPathList = allocatePositionList();
     
     BOOL pathFound = FALSE;
@@ -121,7 +121,7 @@ static void doublePriceNodesArray(SumAndPosArray **arr, unsigned int *size)
     *size = newSize;
 }
 
-static int findAllPathsAndNodesRec(Board board, treeNode *root, Position *dst, SumAndPosArray **arr, unsigned int *size, unsigned int index)
+static int findAllPathsAndNodesRec(Board board, TreeNode *root, Position *dst, SumAndPosArray **arr, unsigned int *size, unsigned int index)
 {
     // Base case - destination is found
     if (isPositionsEqual(&root->position, dst))
@@ -199,7 +199,7 @@ static void mergeSortPricesAndNode(SumAndPosArray *arr, int left, int right)
     mergePricesAndNodes(arr, left, mid, right);
 }
 
-static BOOL findTheCheapestPathRec(PositionList **cheapestPathList, treeNode *root, treeNode *dstNode)
+static BOOL findTheCheapestPathRec(PositionList **cheapestPathList, TreeNode *root, TreeNode *dstNode)
 {
     if (root == dstNode)
     {

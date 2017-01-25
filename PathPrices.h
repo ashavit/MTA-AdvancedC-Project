@@ -3,10 +3,10 @@
 
 #include <stdio.h>
 #include "PositionList.h"
-#include "pathTree.h"
+#include "PathTree.h"
 
-int findAllPathsSortedPrices(Board board, pathTree *tree, Position *dst, int **prices);
-treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst);
-PositionList *findTheCheapestPath(Board board, pathTree *tree, Position *dst);
+int findAllPathsSortedPrices(Board board, PathTree *tree, Position *dst, int **prices);
+TreeNode *findTheCheapestPathEndNode(Board board, TreeNode *node, Position *dst);
+PositionList *findTheCheapestPath(Board board, PathTree *tree, Position *dst);
 
 #endif
