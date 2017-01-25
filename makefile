@@ -2,7 +2,7 @@ All: main.o Board.o Interface.o PathPrices.o PathTree.o PositionArray.o Position
 	clear
 	gcc main.o Board.o Interface.o PathPrices.o PathTree.o PositionArray.o PositionList.o TestClass.o -o main
 	./main
-	make clear
+#	make clear
 
 main.o: main.c Interface.h TestClass.h
 	gcc -c main.c
