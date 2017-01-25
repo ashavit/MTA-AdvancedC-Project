@@ -15,8 +15,10 @@ typedef struct _positionList {
 } PositionList;
 
 
+PositionList* allocatePositionList();
+void freePositionList(PositionList *list);
+
 void insertDataToBeginingList(PositionList *lst, Position dataPtr);
 void printList(PositionList * lst);
-void makeEmptyList(PositionList *lst);
 
 #endif

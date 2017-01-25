@@ -73,16 +73,9 @@ treeNode *findTheCheapestPathEndNode(Board board, treeNode *node, Position *dst)
 PositionList *findTheCheapestPath(Board board, pathTree *tree, Position *dst)
 {
     treeNode *cheapestNode = findTheCheapestPathEndNode(board, tree->root, dst);
-    PositionList *cheapestPathList = (PositionList*)malloc(sizeof(PositionList));
+    PositionList *cheapestPathList = allocatePositionList();
     
     BOOL pathFound = FALSE;
-    if (!cheapestPathList)
-    {
-        printf("Could not allocate PositionArray object");
-        exit(MALLOC_ERROR);
-    }
-    
-    makeEmptyList(cheapestPathList);
     pathFound = findTheCheapestPathRec(cheapestNode, tree->root, &cheapestPathList, dst);
     return cheapestPathList;
 }

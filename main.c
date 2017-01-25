@@ -130,17 +130,9 @@ void testFindTheCheapestPathList2x2()
     Position *src2x2 = allocatePositionObject('B', '2');
     Position *dst2x2 = allocatePositionObject('B', '1');
     pathTree tree2x2 = findAllPossiblePaths(board2x2, src2x2);
-    PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
-    if (!pathList)
-    {
-        printf("Could not allocate PositionArray object");
-        exit(MALLOC_ERROR);
-    }
-    
-    makeEmptyList(pathList);
-    //printInOrder(currTree);
-    pathList = findTheCheapestPath(board2x2, &tree2x2, dst2x2);
+    PositionList *pathList = findTheCheapestPath(board2x2, &tree2x2, dst2x2);
     printList(pathList);
+    freePositionList(pathList);
 }
 
 void testFindTheCheapestPathList3x3()
@@ -151,17 +143,9 @@ void testFindTheCheapestPathList3x3()
     Position *src3x3 = allocatePositionObject('A', '1');
     Position *dst3x3 = allocatePositionObject('C', '3');
     pathTree tree3x3 = findAllPossiblePaths(board3x3, src3x3);
-    PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
-    if (!pathList)
-    {
-        printf("Could not allocate PositionArray object");
-        exit(MALLOC_ERROR);
-    }
-    
-    makeEmptyList(pathList);
-    //printInOrder(currTree);
-    pathList = findTheCheapestPath(board3x3, &tree3x3, dst3x3);
+    PositionList *pathList = findTheCheapestPath(board3x3, &tree3x3, dst3x3);
     printList(pathList);
+    freePositionList(pathList);
 }
 
 void test()

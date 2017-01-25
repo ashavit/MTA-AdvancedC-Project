@@ -9,6 +9,35 @@ static BOOL isEmptyList(PositionList * lst);
 static void insertNodeToBeginingListNode(PositionList *lst, PositionListCell *newHead);
 static PositionListCell * createNewListNode(Position position, PositionListCell *next);
 
+PositionList* allocatePositionList()
+{
+    PositionList *list = (PositionList*)malloc(sizeof(PositionList));
+    if (!list)
+    {
+        printf("Could not allocate PositionList\n");
+        exit(MALLOC_ERROR);
+    }
+    
+    list->head = list->tail = NULL;
+    return list;
+}
+
+void freePositionList(PositionList *lst)
+{
+    if (!lst)
+        return;
+    
+    PositionListCell *curr = lst->head;
+    PositionListCell *next = NULL;
+    while (curr)
+    {
+        next = curr->next;
+        free(curr);
+        curr = next;
+    }
+    free(lst);
+}
+
 //The function print the list
 void printList(PositionList *lst)
 {
@@ -70,9 +99,4 @@ static PositionListCell * createNewListNode(Position position, PositionListCell 
 	res->next = next;
 	return res;
 }
-//The function receive list and empty it
-void makeEmptyList(PositionList *lst)
-{
-	lst->head = lst->tail = NULL;
 
-}
