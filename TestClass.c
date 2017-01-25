@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <stdlib.h>
 #include "TestClass.h"
 
 static void testCheap(Board board);
@@ -15,18 +16,32 @@ static void testFindTheCheapestPathList3x3();
 
 void runTests()
 {
-    //    testSortedPathPricesPath2x2();
+//    run2x2Tests();
+    run3x3Tests();
+//    run4x4Tests();
+}
+
+void run2x2Tests()
+{
+    testSortedPathPricesPath2x2();
+    testFindTheCheapestPathEndNode2x2();
+    testFindTheCheapestPathList2x2();
+}
+
+void run3x3Tests()
+{
     testSortedPathPricesPath3x3();
-    
-    //    Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
-    //    printBoard(board);
-    
-    //testCheap(board);
-    //testPathTree(board);
-    //    testFindTheCheapestPathEndNode2x2();
-    //    testFindTheCheapestPathList2x2();
     testFindTheCheapestPathEndNode3x3();
     testFindTheCheapestPathList3x3();
+}
+
+void run4x4Tests()
+{
+    Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
+    printBoard(board);
+    
+    testCheap(board);
+    testPathTree(board);
 }
 
 static void testCheap(Board board)

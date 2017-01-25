@@ -12,4 +12,8 @@
 
 void runTests();
 
+void run2x2Tests();
+void run3x3Tests();
+void run4x4Tests();
+
 #endif /* TestClass_h */
