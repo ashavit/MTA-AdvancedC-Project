@@ -61,7 +61,9 @@ void runTestLoadBoards()
 
 void runTestSaveBoards()
 {
-    saveBoardToFile("test_save1.bin", NULL);
+    Board board3x3 = { { 97, 104, 56 },{ 103, 57, 50 },{ 121, 97, 65 }};
+    printBoard(board3x3);
+    saveBoardToFile("test_save3x3.bin", board3x3);
 }
 
 static void testCheap(Board board)

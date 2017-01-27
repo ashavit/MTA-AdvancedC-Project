@@ -14,6 +14,7 @@ static Position* cheaperCellPosition(Board board, Position *a, Position *b);
 
 static FILE* openFile(const char* fileName, char *rights);
 static void closeFile(FILE *filePtr);
+static unsigned char* allocateZeroCharArray(int size);
 static unsigned char createMask(int msb, int lsb);
 static unsigned int binReadChar(unsigned char* chars, unsigned int size, FILE *filePtr);
 static unsigned int binWriteChar(unsigned char* chars, unsigned int size, FILE *filePtr);
@@ -129,26 +130,19 @@ void loadBoardFromFile(const char *fileName, Board boardy)
     closeFile(filePtr);
 }
 
-void saveBoardToFile(const char *fileName, Board boardy)
+void saveBoardToFile(const char *fileName, Board board)
 {
-    FILE *filePtr = openFile(fileName, "w");
+    FILE *filePtr = openFile(fileName, "wb");
     
-    unsigned char board[2][2] = { { 97, 104 },{ 103, 57 } };
+    int cellCount = BOARD_SIZE * BOARD_SIZE;
+    int maxBytes = ((cellCount * 14 % 8) ? (cellCount * 14 / 8 + 1) : (cellCount * 14 / 8));
+    unsigned char *data = allocateZeroCharArray(maxBytes);
 
-    //    int max = BOARD_SIZE * BOARD_SIZE;
-//    int max = 4;
-//    int positionsLoaded = 0;
-//    
     int i = 0;
-
-    unsigned char data[7] = { 0 };
-
-    for (int row = 0; row < 2; ++row)
+    for (int row = 0; row < BOARD_SIZE; ++row)
     {
-        for (int col = 0; col < 2; ++col)
+        for (int col = 0; col < BOARD_SIZE; ++col)
         {
-            int countRead = 4; /// TODO:
-            
             int rowBitIndex, rowByte, rowFirstBit, rowLastBit;
             rowBitIndex = 14 * i;
             rowByte = rowBitIndex / 8;
@@ -198,37 +192,19 @@ void saveBoardToFile(const char *fileName, Board boardy)
                 data[valByte+1] |= ((value & createMask(7, 8 - valFirstBit)) >> (8 - valFirstBit));
             }
             
-            
-            //            row =
-            //            fread(data, sizeof(char), 3, filePtr);
-            //            Date res;
-            //            res.day = data[0] & MASK_WITH_RANGE_BITS_SET(char, 0, 4);
-            //            res.month = ((data[0] & MASK_WITH_RANGE_BITS_SET(char, 5, 7)) >> 5) |
-            //            ((data[1] & 1) << 3);
-            //            res.year = ((data[1] & MASK_WITH_RANGE_BITS_SET(char, 1, 7)) >> 1) |
-            //            ((data[2] & createMask(3, 0)) << 7);
-            
-//            printf("Loaded value %d to %d,%d\n", value, row, col);
-//        }
-//
-//        positionsLoaded += countRead;
             ++i;
-    
-    
         }
     }
     
-    printf("ASCII rep is %s.\n\n", data);
-    
-    binWriteChar(data, 7, filePtr);
-    
-    for (int t = 0; t < 7; ++t)
+    for (int t = 0; t < maxBytes; ++t)
     {
         printf("%d, ", data[t]);
     }
-    printf("\b\b\n");
+    printf("\n");
     
+    binWriteChar(data, 7, filePtr);
     closeFile(filePtr);
+    free(data);
 }
 
 void printBoard(Board board)
@@ -418,6 +394,22 @@ static FILE* openFile(const char* fileName, char *rights)
 static void closeFile(FILE *filePtr)
 {
     fclose(filePtr);
+}
+
+static unsigned char* allocateZeroCharArray(int size)
+{
+    unsigned char *result = (unsigned char*)malloc(sizeof(unsigned char) * size);
+    if (!result)
+    {
+        printf("Could not allocate char array object");
+        exit(MALLOC_ERROR);
+    }
+    
+    for (int i = 0; i < size; ++i)
+        result[i] = 0;
+    
+    printf("Allocated zero array with %d chars\n", size);
+    return result;
 }
 
 static unsigned char createMask(int msb, int lsb)
