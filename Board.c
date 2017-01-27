@@ -129,6 +129,7 @@ void loadBoardFromFile(const char *fileName, Board board)
     closeFile(filePtr);
 }
 
+/* Save data to bin file */
 void saveBoardToFile(const char *fileName, Board board)
 {
     FILE *filePtr = openFile(fileName, "wb");
@@ -142,6 +143,8 @@ void saveBoardToFile(const char *fileName, Board board)
     {
         for (int col = 0; col < BOARD_SIZE; ++col)
         {
+            /* Algorithm is based on a 14 bit size for each cell */
+
             int rowBitIndex, rowByte, rowFirstBit, rowLastBit;
             rowBitIndex = 14 * i;
             rowByte = rowBitIndex / 8;

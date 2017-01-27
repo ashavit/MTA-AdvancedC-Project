@@ -53,18 +53,25 @@ void run4x4Tests()
     freePositionList(pathList);
 }
 
+/// * When testing save / load - make sure the BOARD_SIZE const fits the tested board size */
 void runTestLoadBoards()
 {
     Board board;
-    loadBoardFromFile("test_save3x3.bin", board);
+//    loadBoardFromFile("test_save3x3.bin", board);
+    loadBoardFromFile("test_save4x4.bin", board);
     printBoard(board);
 }
 
+/// * When testing save / load - make sure the BOARD_SIZE const fits the tested board size */
 void runTestSaveBoards()
 {
-    Board board3x3 = { { 97, 104, 56 },{ 103, 57, 50 },{ 121, 97, 65 }};
-    printBoard(board3x3);
-    saveBoardToFile("test_save3x3.bin", board3x3);
+//    Board board3x3 = { { 97, 104, 56 },{ 103, 57, 50 },{ 121, 97, 65 }};
+//    printBoard(board3x3);
+//    saveBoardToFile("test_save3x3.bin", board3x3);
+    
+    Board board4x4 = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
+    printBoard(board4x4);
+    saveBoardToFile("test_save4x4.bin", board4x4);
 }
 
 static void testCheap(Board board)
