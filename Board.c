@@ -60,12 +60,6 @@ void loadBoardFromFile(const char *fileName, Board board)
         int readBytes = ceil(readItteration * 14.0 / 8);
         binReadChar(data, readBytes, filePtr);
         
-        for (int t = 0; t < 7; ++t)
-        {
-            printf("%d, ", data[t]);
-        }
-        printf("\n");
-        
         for (int i = 0; i < readItteration; ++i)
         {
             char row = 0, col = 0;
@@ -121,7 +115,7 @@ void loadBoardFromFile(const char *fileName, Board board)
             
             board[row][col] = value;
             ++positionsLoaded;
-            printf("Loaded value %d to %d,%d\n", value, row, col);
+//            printf("Loaded value %d to %d,%d\n", value, row, col);
         }
         free(data);
     }
@@ -197,12 +191,6 @@ void saveBoardToFile(const char *fileName, Board board)
             ++i;
         }
     }
-    
-    for (int t = 0; t < maxBytes; ++t)
-    {
-        printf("%d, ", data[t]);
-    }
-    printf("\n");
     
     binWriteChar(data, maxBytes, filePtr);
     closeFile(filePtr);
@@ -410,7 +398,7 @@ static unsigned char* allocateZeroCharArray(int size)
     for (int i = 0; i < size; ++i)
         result[i] = 0;
     
-    printf("Allocated zero array with %d chars\n", size);
+//    printf("Allocated zero array with %d chars\n", size);
     return result;
 }
 
