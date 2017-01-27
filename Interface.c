@@ -1,16 +1,23 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <stdlib.h>
 #include "Interface.h"
 #include "Board.h"
+#include "PositionArray.h"
+#include "PathPrices.h"
+#include "pathTree.h"
 
 #define EXIT_CODE 7
 
-static void performAction(int option, Board board);
+static void performAction(int option, Board board, Position **src, Position **dst, BOOL *valSrc, BOOL *valDst);
 
 void loadMenu()
 {
     Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
     int option;
+    char src[3], dst[3];
+    Position *srcPos, *dstPos;
+    BOOL validSrc = FALSE, validDst = FALSE;
     
     printf("1. Load a board from file\n");
     printf("2. Enter a source postition and destination\n");
@@ -24,41 +31,108 @@ void loadMenu()
     do
     {
         scanf("%d", &option);
-        performAction(option, board);
+        if (option == 2)
+        {
+            scanf("%s", src);
+            scanf("%s", dst);
+            srcPos = allocatePositionObject(src[0], src[1]);
+            dstPos = allocatePositionObject(dst[0], dst[1]);
+            validSrc = validatePosition(board, srcPos, "keep");
+            validDst = validatePosition(board, dstPos, "keep");
+            if (!validDst || !validSrc)
+                printf("Invalid Positions");
+        }
+        performAction(option, board, &srcPos, &dstPos, &validSrc, &validDst);
     } while (option != EXIT_CODE);
+    
 }
 
-static void performAction(int option, Board board)
+static void performAction(int option, Board board, Position **src, Position **dst, BOOL *valSrc, BOOL *valDst)
 {
+    //	Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
+    
+    PositionArray *posArray1;
+    PathTree tree;
+    int *prices;
+    char newSrc[3], newDst[3];
+    int count = 0;
+    PositionList *pathList = (PositionList*)malloc(sizeof(PositionList));
+    if (!pathList)
+    {
+        printf("Could not allocate PositionArray object");
+        exit(MALLOC_ERROR);
+    }
+    
     switch (option)
     {
-        case 3:
-        {
-//            Position* src1, *src2;
-//            Position* dst1, *dst2;
-//            
-//            src1 = allocatePositionObject('A', '4');
-//            dst1 = allocatePositionObject('D', '1');
-//            PositionArray *posArray1 = greedyCheapPath(board, src1, dst1); /* Should return empty list */
-//            freePositionArray(posArray1);
-//            
-//            src2 = allocatePositionObject('A', '4');
-//            dst2 = allocatePositionObject('C', '3');
-//            PositionArray *posArray2 = greedyCheapPath(board, src2, dst2); /* Should return null */
-//            printPostionionsArray(posArray2);
-//            freePositionArray(posArray2);
-            break;
-        }
-        case 4:
-        {
-//            Position* src1;
-//            PathTree tree1;
-//            src1 = allocatePositionObject('A', '4');
-//            tree1 = findAllPossiblePaths(board, src1);
-//            printInOrder(tree1);
-        }
             
-        default:
+        case 3:
+            if (!(*valDst) || !(*valSrc))
+            {
+                printf("Please Enter Vaid Positions\n");
+                scanf("%s", &newSrc);
+                scanf("%s", &newDst);
+                *src = allocatePositionObject(newSrc[0], newSrc[1]);
+                *dst = allocatePositionObject(newDst[0], newDst[1]);
+                *valDst = TRUE;
+                *valSrc = TRUE;
+                
+            }
+            posArray1 = greedyCheapPath(board, *src, *dst);
+            printPostionionsArray(posArray1);
+            break;
+        case 4:
+            if (!(*valDst) || !(*valSrc))
+            {
+                printf("Please Enter Vaid Positions\n");
+                scanf("%s", &newSrc);
+                scanf("%s", &newDst);
+                *src = allocatePositionObject(newSrc[0], newSrc[1]);
+                *dst = allocatePositionObject(newDst[0], newDst[1]);
+                *valDst = TRUE;
+                *valSrc = TRUE;
+                
+            }
+            tree = findAllPossiblePaths(board, *src);
+            printInOrder(tree);
+            break;
+        case 5:
+            if (!(*valDst) || !(*valSrc))
+            {
+                printf("Please Enter Vaid Positions\n");
+                scanf("%s", &newSrc);
+                scanf("%s", &newDst);
+                *src = allocatePositionObject(newSrc[0], newSrc[1]);
+                *dst = allocatePositionObject(newDst[0], newDst[1]);
+                *valDst = TRUE;
+                *valSrc = TRUE;
+                
+            }
+            tree = findAllPossiblePaths(board, *src);
+            count = findAllPathsSortedPrices(board, &tree, *dst, &prices);
+            printf("Price array size = %d:\n", count);
+            for (int i = 0; i < count; ++i)
+            {
+                printf("%d  ", prices[i]);
+            }
+            printf("\n\n");
+            break;
+        case 6:
+            if (!(*valDst) || !(*valSrc))
+            {
+                printf("Please Enter Vaid Positions\n");
+                scanf("%s", &newSrc);
+                scanf("%s", &newDst);
+                *src = allocatePositionObject(newSrc[0], newSrc[1]);
+                *dst = allocatePositionObject(newDst[0], newDst[1]);
+                *valDst = TRUE;
+                *valSrc = TRUE;
+            }
+            pathList = allocatePositionList();
+            tree = findAllPossiblePaths(board, *src);
+            pathList = findTheCheapestPath(board, &tree, *dst);
+            printList(pathList);
             break;
     }
+    
 }

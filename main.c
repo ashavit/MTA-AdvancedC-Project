@@ -8,8 +8,8 @@
 
 int main()
 {
-    runTests();
-//    loadMenu();
+//    runTests();
+    loadMenu();
     
     return 0;
 }
