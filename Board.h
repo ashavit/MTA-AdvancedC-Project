@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "Commons.h"
 
-#define BOARD_SIZE 4
+#define BOARD_SIZE 8
 
 #pragma mark - Data Model
 
