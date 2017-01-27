@@ -13,7 +13,7 @@ static void performAction(int option, Board board, Position **src, Position **ds
 
 void loadMenu()
 {
-    Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
+    Board board;
     int option;
     char src[3], dst[3];
     Position *srcPos, *dstPos;
@@ -49,8 +49,6 @@ void loadMenu()
 
 static void performAction(int option, Board board, Position **src, Position **dst, BOOL *valSrc, BOOL *valDst)
 {
-    //	Board board = { { 97, 104, 56, 105 },{ 103, 57, 50, 122 },{ 121, 97, 65, 98 },{ 53, 115, 50, 52 } };
-    
     PositionArray *posArray1;
     PathTree tree;
     int *prices;
@@ -65,7 +63,16 @@ static void performAction(int option, Board board, Position **src, Position **ds
     
     switch (option)
     {
-            
+        case 1:
+        {
+            char fileName[255] = { 0 };
+            printf("Please enter name of binary file:\n");
+            scanf("%s", fileName);
+            loadBoardFromFile(fileName, board);
+            printBoard(board);
+            printf("Loaded file\n");
+            break;
+        }
         case 3:
             if (!(*valDst) || !(*valSrc))
             {
