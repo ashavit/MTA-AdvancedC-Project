@@ -26,11 +26,13 @@ void loadMenu()
     printf("5. Find all sorted path prices starting from source\n");
     printf("6. Find he cheapest path between source and destination\n");
     printf("7. Exit\n");
-    printf("Select option:\n");
     
     do
     {
+        printf("\nSelect option:\n");
         scanf("%d", &option);
+        printf("\n");
+        
         if (option == 2)
         {
             scanf("%s", src);
@@ -77,8 +79,8 @@ static void performAction(int option, Board board, Position **src, Position **ds
             if (!(*valDst) || !(*valSrc))
             {
                 printf("Please Enter Vaid Positions\n");
-                scanf("%s", &newSrc);
-                scanf("%s", &newDst);
+                scanf("%s", newSrc);
+                scanf("%s", newDst);
                 *src = allocatePositionObject(newSrc[0], newSrc[1]);
                 *dst = allocatePositionObject(newDst[0], newDst[1]);
                 *valDst = TRUE;
@@ -86,7 +88,10 @@ static void performAction(int option, Board board, Position **src, Position **ds
                 
             }
             posArray1 = greedyCheapPath(board, *src, *dst);
-            printPostionionsArray(posArray1);
+            if (posArray1->logical_size)
+                printPostionionsArray(posArray1);
+            else
+                printf("Greedy Cheap Path not found\n");
             break;
         case 4:
             if (!(*valDst) || !(*valSrc))
@@ -101,7 +106,8 @@ static void performAction(int option, Board board, Position **src, Position **ds
                 
             }
             tree = findAllPossiblePaths(board, *src);
-            printInOrder(tree);
+//            printInOrder(tree);
+            printf("Finished building tree");
             break;
         case 5:
             if (!(*valDst) || !(*valSrc))
@@ -118,11 +124,11 @@ static void performAction(int option, Board board, Position **src, Position **ds
             tree = findAllPossiblePaths(board, *src);
             count = findAllPathsSortedPrices(board, &tree, *dst, &prices);
             printf("Price array size = %d:\n", count);
-            for (int i = 0; i < count; ++i)
-            {
-                printf("%d  ", prices[i]);
-            }
-            printf("\n\n");
+//            for (int i = 0; i < count; ++i)
+//            {
+//                printf("%d  ", prices[i]);
+//            }
+//            printf("\n\n");
             break;
         case 6:
             if (!(*valDst) || !(*valSrc))
