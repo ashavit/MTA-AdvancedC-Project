@@ -47,6 +47,7 @@ void loadMenu()
         performAction(option, board, &srcPos, &dstPos, &validSrc, &validDst);
     } while (option != EXIT_CODE);
     
+    printf("Good bye!!\n\n");
 }
 
 static void performAction(int option, Board board, Position **src, Position **dst, BOOL *valSrc, BOOL *valDst)
@@ -97,8 +98,8 @@ static void performAction(int option, Board board, Position **src, Position **ds
             if (!(*valDst) || !(*valSrc))
             {
                 printf("Please Enter Vaid Positions\n");
-                scanf("%s", &newSrc);
-                scanf("%s", &newDst);
+                scanf("%s", newSrc);
+                scanf("%s", newDst);
                 *src = allocatePositionObject(newSrc[0], newSrc[1]);
                 *dst = allocatePositionObject(newDst[0], newDst[1]);
                 *valDst = TRUE;
@@ -113,8 +114,8 @@ static void performAction(int option, Board board, Position **src, Position **ds
             if (!(*valDst) || !(*valSrc))
             {
                 printf("Please Enter Vaid Positions\n");
-                scanf("%s", &newSrc);
-                scanf("%s", &newDst);
+                scanf("%s", newSrc);
+                scanf("%s", newDst);
                 *src = allocatePositionObject(newSrc[0], newSrc[1]);
                 *dst = allocatePositionObject(newDst[0], newDst[1]);
                 *valDst = TRUE;
@@ -134,8 +135,8 @@ static void performAction(int option, Board board, Position **src, Position **ds
             if (!(*valDst) || !(*valSrc))
             {
                 printf("Please Enter Vaid Positions\n");
-                scanf("%s", &newSrc);
-                scanf("%s", &newDst);
+                scanf("%s", newSrc);
+                scanf("%s", newDst);
                 *src = allocatePositionObject(newSrc[0], newSrc[1]);
                 *dst = allocatePositionObject(newDst[0], newDst[1]);
                 *valDst = TRUE;
