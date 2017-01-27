@@ -18,7 +18,9 @@ void runTests()
 {
 //    run2x2Tests();
     // run3x3Tests();
-   run4x4Tests();
+//   run4x4Tests();
+    runTestSaveBoards();
+    runTestLoadBoards();
 }
 
 void run2x2Tests()
@@ -49,6 +51,17 @@ void run4x4Tests()
     PositionList *pathList = findTheCheapestPath(board, &tree, dst);
     printList(pathList);
     freePositionList(pathList);
+}
+
+void runTestLoadBoards()
+{
+    Board board;
+    loadBoardFromFile("test_save1.bin", board);
+}
+
+void runTestSaveBoards()
+{
+    saveBoardToFile("test_save1.bin", NULL);
 }
 
 static void testCheap(Board board)

@@ -4,10 +4,19 @@
 #include <string.h>
 #include "Board.h"
 
+#define READ_FILE_ERROR 2
+#define WRITE_FILE_ERROR 3
+
 #pragma mark - Private Declarations
 
 /* Return cheaper cell if exist, or null if doesn't exist or if price is 0 */
 static Position* cheaperCellPosition(Board board, Position *a, Position *b);
+
+static FILE* openFile(const char* fileName, char *rights);
+static void closeFile(FILE *filePtr);
+static unsigned char createMask(int msb, int lsb);
+static unsigned int binReadChar(unsigned char* chars, unsigned int size, FILE *filePtr);
+static unsigned int binWriteChar(unsigned char* chars, unsigned int size, FILE *filePtr);
 
 #pragma mark - Public Methods
 
@@ -29,6 +38,197 @@ Position* allocatePositionObject(char row, char col)
 void freePositionObject(Position *pos)
 {
     free(pos);
+}
+
+void loadBoardFromFile(const char *fileName, Board boardy)
+{
+    FILE *filePtr = openFile(fileName, "r");
+    
+    unsigned char board[2][2];
+    
+//    int max = BOARD_SIZE * BOARD_SIZE;
+//    int max = 4;
+//    int positionsLoaded = 0;
+
+    
+//    int i = 0;
+    unsigned char data[7] = { 0 };
+    binReadChar(data, 7, filePtr);
+    
+    for (int t = 0; t < 7; ++t)
+    {
+        printf("%d, ", data[t]);
+    }
+    printf("\n");
+    
+    
+    for (int i = 0; i < 4; ++i)
+    {
+//        for (int col = 0; col < 2; ++col)
+//        {
+            char row = 0, col = 0;
+            unsigned char value = 0;
+//            int countRead = 4; /// TODO:
+        
+            int rowBitIndex, rowByte, rowFirstBit, rowLastBit;
+            rowBitIndex = 14 * i;
+            rowByte = rowBitIndex / 8;
+            rowFirstBit = rowBitIndex % 8;
+            rowLastBit = rowFirstBit + 2;
+            
+            if (rowLastBit < 8)
+            {
+                row |= ((data[rowByte] & createMask(rowLastBit, rowFirstBit)) >> rowFirstBit);
+            }
+            else
+            {
+                row |= ((data[rowByte] & createMask(7, rowFirstBit)) >> rowFirstBit);
+                row |= ((data[rowByte+1] & createMask(rowLastBit - 8, 0)) << (8 - rowFirstBit));
+            }
+            
+            int colBitIndex, colByte, colFirstBit, colLastBit;
+            colBitIndex = (14 * i) + 3;
+            colByte = colBitIndex / 8;
+            colFirstBit = colBitIndex % 8;
+            colLastBit = colFirstBit + 2;
+            
+            if (colLastBit < 8)
+            {
+                col |= ((data[colByte] & createMask(colLastBit, colFirstBit)) >> colFirstBit);
+            }
+            else
+            {
+                col |= ((data[colByte] & createMask(7, colFirstBit)) >> colFirstBit);
+                col |= ((data[colByte+1] & createMask(colLastBit - 8, 0)) << (8 - colFirstBit));
+            }
+            
+            int valBitIndex, valByte, valFirstBit, valLastBit;
+            valBitIndex = (14 * i) + 6;
+            valByte = valBitIndex / 8;
+            valFirstBit = valBitIndex % 8;
+            valLastBit = valFirstBit + 7;
+        
+            if (valLastBit < 8)
+            {
+                value = data[valByte];
+            }
+            else
+            {
+                value |= ((data[valByte] & createMask(7, valFirstBit)) >> valFirstBit);
+                value |= ((data[valByte+1] & createMask(valLastBit - 8, 0)) << (8 - valFirstBit));
+            }
+        
+            board[row][col] = value;
+            printf("Loaded value %d to %d,%d\n", value, row, col);
+
+//        }
+    }
+    
+//    unsigned char board[2][2] = { { 97, 104 },{ 103, 57 } };
+
+    closeFile(filePtr);
+}
+
+void saveBoardToFile(const char *fileName, Board boardy)
+{
+    FILE *filePtr = openFile(fileName, "w");
+    
+    unsigned char board[2][2] = { { 97, 104 },{ 103, 57 } };
+
+    //    int max = BOARD_SIZE * BOARD_SIZE;
+//    int max = 4;
+//    int positionsLoaded = 0;
+//    
+    int i = 0;
+
+    unsigned char data[7] = { 0 };
+
+    for (int row = 0; row < 2; ++row)
+    {
+        for (int col = 0; col < 2; ++col)
+        {
+            int countRead = 4; /// TODO:
+            
+            int rowBitIndex, rowByte, rowFirstBit, rowLastBit;
+            rowBitIndex = 14 * i;
+            rowByte = rowBitIndex / 8;
+            rowFirstBit = rowBitIndex % 8;
+            rowLastBit = rowFirstBit + 2;
+            
+            if (rowLastBit < 8)
+            {
+                data[rowByte] |= ((row & createMask(2, 0)) << rowFirstBit);
+            }
+            else
+            {
+                data[rowByte]   |= ((row & createMask(7 - rowFirstBit, 0)) << rowFirstBit);
+                data[rowByte+1] |= ((row & createMask(2, 8 - rowFirstBit)) >> (8 - rowFirstBit));
+            }
+            
+            int colBitIndex, colByte, colFirstBit, colLastBit;
+            colBitIndex = (14 * i) + 3;
+            colByte = colBitIndex / 8;
+            colFirstBit = colBitIndex % 8;
+            colLastBit = colFirstBit + 2;
+            
+            if (colLastBit < 8)
+            {
+                data[colByte] |= ((col & createMask(2, 0)) << colFirstBit);
+            }
+            else
+            {
+                data[colByte]   |= ((col & createMask(7 - colFirstBit, 0)) << colFirstBit);
+                data[colByte+1] |= ((col & createMask(2, 8 - colFirstBit)) >> (8 - colFirstBit));
+            }
+            
+            int valBitIndex, valByte, valFirstBit, valLastBit;
+            valBitIndex = (14 * i) + 6;
+            valByte = valBitIndex / 8;
+            valFirstBit = valBitIndex % 8;
+            valLastBit = valFirstBit + 7;
+            unsigned char value = board[row][col];
+            
+            if (valLastBit < 8)
+            {
+                data[valByte] = value;
+            }
+            else
+            {
+                data[valByte]   |= ((value & createMask(7 - valFirstBit, 0)) << valFirstBit);
+                data[valByte+1] |= ((value & createMask(7, 8 - valFirstBit)) >> (8 - valFirstBit));
+            }
+            
+            
+            //            row =
+            //            fread(data, sizeof(char), 3, filePtr);
+            //            Date res;
+            //            res.day = data[0] & MASK_WITH_RANGE_BITS_SET(char, 0, 4);
+            //            res.month = ((data[0] & MASK_WITH_RANGE_BITS_SET(char, 5, 7)) >> 5) |
+            //            ((data[1] & 1) << 3);
+            //            res.year = ((data[1] & MASK_WITH_RANGE_BITS_SET(char, 1, 7)) >> 1) |
+            //            ((data[2] & createMask(3, 0)) << 7);
+            
+//            printf("Loaded value %d to %d,%d\n", value, row, col);
+//        }
+//
+//        positionsLoaded += countRead;
+            ++i;
+    
+    
+        }
+    }
+    
+    printf("ASCII rep is %s.\n\n", data);
+    
+    binWriteChar(data, 7, filePtr);
+    
+    for (int t = 0; t < 7; ++t)
+    {
+        printf("%d, ", data[t]);
+    }
+    printf("\b\b\n");
+    
+    closeFile(filePtr);
 }
 
 void printBoard(Board board)
@@ -200,5 +400,51 @@ static Position* cheaperCellPosition(Board board, Position *a, Position *b)
         return b;
     else /* Neither have valid price */
         return NULL;
+}
+
+#pragma mark - Files and Masks
+
+static FILE* openFile(const char* fileName, char *rights)
+{
+    FILE *filePtr = fopen(fileName, rights);
+    if (!filePtr)
+    {
+        printf("Error opening file %s for %s\n", fileName, rights);
+        exit(READ_FILE_ERROR);
+    }
+    return filePtr;
+}
+
+static void closeFile(FILE *filePtr)
+{
+    fclose(filePtr);
+}
+
+static unsigned char createMask(int msb, int lsb)
+{
+    unsigned char mask = (  (1 << (msb + 1)) - (1 << lsb) );
+    return mask;
+}
+
+static unsigned int binReadChar(unsigned char* chars, unsigned int maxSize, FILE *filePtr)
+{
+    unsigned long read = fread(chars, sizeof(char), maxSize, filePtr);
+    if (!read)
+    {
+        printf("Error reading string file\n");
+        exit(READ_FILE_ERROR);
+    }
+    return (unsigned int)read;
+}
+
+static unsigned int binWriteChar(unsigned char* chars, unsigned int size, FILE *filePtr)
+{
+    unsigned long written = fwrite(chars, sizeof(char), size, filePtr);
+    if (written != size)
+    {
+        printf("Error writing chars to file (written %ld)\n", written);
+        exit(WRITE_FILE_ERROR);
+    }
+    return size;
 }
 

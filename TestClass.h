@@ -15,5 +15,7 @@ void runTests();
 void run2x2Tests();
 void run3x3Tests();
 void run4x4Tests();
+void runTestLoadBoards();
+void runTestSaveBoards();
 
 #endif /* TestClass_h */
