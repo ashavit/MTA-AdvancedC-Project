@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "Board.h"
 
 #define READ_FILE_ERROR 2
@@ -41,36 +42,35 @@ void freePositionObject(Position *pos)
     free(pos);
 }
 
-void loadBoardFromFile(const char *fileName, Board boardy)
+/* Read data bin file in chunks of 7 bytes = 4 cell * 14 bits each */
+void loadBoardFromFile(const char *fileName, Board board)
 {
-    FILE *filePtr = openFile(fileName, "r");
+    FILE *filePtr = openFile(fileName, "rb");
     
-    unsigned char board[2][2];
+    int cellCount = BOARD_SIZE * BOARD_SIZE;
+    int positionsLoaded = 0;
+    int readItteration = 0;
     
-//    int max = BOARD_SIZE * BOARD_SIZE;
-//    int max = 4;
-//    int positionsLoaded = 0;
+    while (positionsLoaded < cellCount)
+    {
+        // Positions to read in this itteration
+        readItteration = (cellCount - positionsLoaded > 4 ? 4 : cellCount - positionsLoaded);
 
-    
-//    int i = 0;
-    unsigned char data[7] = { 0 };
-    binReadChar(data, 7, filePtr);
-    
-    for (int t = 0; t < 7; ++t)
-    {
-        printf("%d, ", data[t]);
-    }
-    printf("\n");
-    
-    
-    for (int i = 0; i < 4; ++i)
-    {
-//        for (int col = 0; col < 2; ++col)
-//        {
+        unsigned char *data = allocateZeroCharArray(7);
+        int readBytes = ceil(readItteration * 14.0 / 8);
+        binReadChar(data, readBytes, filePtr);
+        
+        for (int t = 0; t < 7; ++t)
+        {
+            printf("%d, ", data[t]);
+        }
+        printf("\n");
+        
+        for (int i = 0; i < readItteration; ++i)
+        {
             char row = 0, col = 0;
             unsigned char value = 0;
-//            int countRead = 4; /// TODO:
-        
+            
             int rowBitIndex, rowByte, rowFirstBit, rowLastBit;
             rowBitIndex = 14 * i;
             rowByte = rowBitIndex / 8;
@@ -108,7 +108,7 @@ void loadBoardFromFile(const char *fileName, Board boardy)
             valByte = valBitIndex / 8;
             valFirstBit = valBitIndex % 8;
             valLastBit = valFirstBit + 7;
-        
+            
             if (valLastBit < 8)
             {
                 value = data[valByte];
@@ -118,14 +118,13 @@ void loadBoardFromFile(const char *fileName, Board boardy)
                 value |= ((data[valByte] & createMask(7, valFirstBit)) >> valFirstBit);
                 value |= ((data[valByte+1] & createMask(valLastBit - 8, 0)) << (8 - valFirstBit));
             }
-        
+            
             board[row][col] = value;
+            ++positionsLoaded;
             printf("Loaded value %d to %d,%d\n", value, row, col);
-
-//        }
+        }
+        free(data);
     }
-    
-//    unsigned char board[2][2] = { { 97, 104 },{ 103, 57 } };
 
     closeFile(filePtr);
 }
@@ -202,7 +201,7 @@ void saveBoardToFile(const char *fileName, Board board)
     }
     printf("\n");
     
-    binWriteChar(data, 7, filePtr);
+    binWriteChar(data, maxBytes, filePtr);
     closeFile(filePtr);
     free(data);
 }

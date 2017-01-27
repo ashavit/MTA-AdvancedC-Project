@@ -56,7 +56,8 @@ void run4x4Tests()
 void runTestLoadBoards()
 {
     Board board;
-    loadBoardFromFile("test_save1.bin", board);
+    loadBoardFromFile("test_save3x3.bin", board);
+    printBoard(board);
 }
 
 void runTestSaveBoards()
